@@ -1,2 +1,1 @@
-# Streamlit Cloud sistem bağımlılıkları (gerekirse)
-# Şu an ekstra sistem paketi gerekmiyor — Python paketleri requirements.txt ile yönetiliyor
+
