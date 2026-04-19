@@ -9,7 +9,7 @@
 ![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 [![CI](https://github.com/ialpp/apex-risk-terminal/actions/workflows/ci.yml/badge.svg)](https://github.com/ialpp/apex-risk-terminal/actions/workflows/ci.yml)
 
-[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://apex-risk-terminal.streamlit.app)
+[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://apex-risk-terminal-as5vrwswtre8zwrhosgurp.streamlit.app)
 
 **Makine öğrenmesi destekli, kurumsal düzeyde kredi riski analiz ve karar destek sistemi.**
 
