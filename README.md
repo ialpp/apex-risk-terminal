@@ -7,8 +7,13 @@
 ![Streamlit](https://img.shields.io/badge/Streamlit-1.32+-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)
 ![scikit-learn](https://img.shields.io/badge/scikit--learn-1.3+-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
+[![CI](https://github.com/YOUR_USERNAME/apex-risk-terminal/actions/workflows/ci.yml/badge.svg)](https://github.com/YOUR_USERNAME/apex-risk-terminal/actions/workflows/ci.yml)
+
+[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://apex-risk-terminal.streamlit.app)
 
 **Makine öğrenmesi destekli, kurumsal düzeyde kredi riski analiz ve karar destek sistemi.**
+
+> ⚠️ **Not:** Yukarıdaki GitHub ve Streamlit değiştirgeçlerini (YOUR_USERNAME, URL) kendi bilgilerinizle güncelleyin.
 
 </div>
 
@@ -107,7 +112,7 @@ Veri & Raporlama
 
 ```bash
 # 1. Depoyu klonlayın
-git clone https://github.com/KULLANICI_ADI/apex-risk-terminal.git
+git clone https://github.com/YOUR_USERNAME/apex-risk-terminal.git
 cd apex-risk-terminal
 
 # 2. Sanal ortam oluşturun (önerilen)
@@ -302,6 +307,21 @@ apex-risk-terminal/
 ## 📄 Lisans
 
 Bu proje **MIT Lisansı** ile lisanslanmıştır. Detaylar için [LICENSE](LICENSE) dosyasına bakın.
+
+---
+
+## 📸 Ekran Görüntüleri
+
+> 📌 Ekran görüntüleri Streamlit Cloud deploy sonrası eklenecektir.  
+> Uygulamayı çalıştırarak canlı demo için yukarıdaki **Open in Streamlit** badge'ine tıklayın.
+
+| Ekran | Açıklama |
+|---|---|
+| Executive Dashboard | Yönetici özet ekranı, KPI kartları, portföy dağılımı |
+| Müşteri Analizi | Kredi skoru motoru, FICO dağılımı, risk kategorisi |
+| Stres Testi | 4 makroekonomik senaryo karşılaştırması |
+| ESG Analizi | Sürdürülebilirlik skoru ve çevre risk metrikleri |
+| Portföy Optimizasyonu | Markowitz etkin sınır görselizasyonu |
 
 ---
 

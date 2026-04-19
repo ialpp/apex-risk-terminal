@@ -401,12 +401,36 @@ class DatabaseHandler:
     # ──────────────────────────────────────────────────────────────
 
     def _seed_default_data(self):
-        """Sisteme ilk kez girildiğinde varsayılan kullanıcıları oluşturur."""
+        """Sisteme ilk kez girildiğinde varsayılan kullanıcıları oluşturur.
+        
+        Şifreler Streamlit secrets'tan okunur.
+        Secrets yoksa (local dev) fallback değerler kullanılır.
+        
+        .streamlit/secrets.toml örneği:
+            [demo_users]
+            admin_password   = "GüçlüŞifre123!"
+            analyst_password = "AnalistŞifre456!"
+            mudur_password   = "MüdürŞifre789!"
+            stajyer_password = "StajyerŞifre012!"
+        """
+        try:
+            import streamlit as st
+            secrets = st.secrets.get("demo_users", {})
+            admin_pwd   = secrets.get("admin_password",   "admin123")
+            analyst_pwd = secrets.get("analyst_password", "analist123")
+            mudur_pwd   = secrets.get("mudur_password",   "mudur123")
+            stajyer_pwd = secrets.get("stajyer_password", "stajyer123")
+        except Exception:
+            # Streamlit context dışında (test ortamı vb.) fallback
+            admin_pwd, analyst_pwd, mudur_pwd, stajyer_pwd = (
+                "admin123", "analist123", "mudur123", "stajyer123"
+            )
+
         default_users = [
-            ("admin",    "admin123",    "Head Analist",    "Sistem Yöneticisi",    "admin@proquant.com",    "Risk Yönetimi"),
-            ("analist1", "analist123",  "Risk Analisti",   "Ahmet Yıldız",         "ahmet@proquant.com",    "Bireysel Bankacılık"),
-            ("mudur",    "mudur123",    "Genel Müdür",     "Mehmet Özcan",         "mudur@proquant.com",    "Üst Yönetim"),
-            ("stajyer",  "stajyer123",  "Stajyer Analist", "Zeynep Kaya",          "zeynep@proquant.com",   "Staj Programı"),
+            ("admin",    admin_pwd,   "Head Analist",    "Sistem Yöneticisi", "admin@proquant.com",  "Risk Yönetimi"),
+            ("analist1", analyst_pwd, "Risk Analisti",   "Ahmet Yıldız",      "ahmet@proquant.com",  "Bireysel Bankacılık"),
+            ("mudur",    mudur_pwd,   "Genel Müdür",     "Mehmet Özcan",      "mudur@proquant.com",  "Üst Yönetim"),
+            ("stajyer",  stajyer_pwd, "Stajyer Analist", "Zeynep Kaya",       "zeynep@proquant.com", "Staj Programı"),
         ]
         for uname, pwd, role, full_name, email, dept in default_users:
             self.add_user(uname, pwd, role, full_name, email, dept)

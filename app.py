@@ -134,14 +134,14 @@ NAV_ITEMS = [
     ("📜",  "Düzenleyici Raporlar",    2), # Phase 2
     ("📐",  "Türev Ürünler Matematiği", 2), # Phase 2
     ("🌱",  "ESG & Sürdürülebilirlik", 1), # Phase 2
-    ("🧬",  "AutoML Evrimsel Opt.",    2), # Phase 2
+    ("🔧",  "AutoML Evrimsel Opt.",    2), # Phase 2
     ("🕸️",  "Derin Öğrenme Merkezi",   2), # Phase 2
     ("📡",  "Canlı Risk Monitörü",     1), # Phase 2
     ("🏦",  "Egzotik Kredi Yapılandırma", 2), # Phase 2
-    ("📉",  "Sabit Getirili Ürünler",  2), # Phase 7
+    ("💹",  "Sabit Getirili Ürünler",  2), # Phase 7
     ("🔄",  "İstatistiksel Arbitraj",  2), # Phase 7
-    ("📐",  "Opsiyon Analizi & Greeks", 2), # Phase 7
-    ("🧬",  "Fama-French Faktör Alfa", 2), # Phase 7
+    ("🎯",  "Opsiyon Analizi & Greeks", 2), # Phase 7
+    ("🔵",  "Fama-French Faktör Alfa", 2), # Phase 7
     ("🌍",  "Makro Rejim & Tahsis",    2), # Phase 7
     ("🏘️",  "Yapılandırılmış Finans & MBS", 2), # Phase 9
     ("⛓️",  "Kripto & DeFi Analitikleri",  2), # Phase 9
@@ -149,32 +149,32 @@ NAV_ITEMS = [
     ("⚖️",  "Basel IV & CCAR Regülasyon", 2), # Phase 9
     ("🌌",  "Kuantum Finans Laboratuvarı", 2), # Phase 9
     ("🚀",  "Uzay Ekonomisi",          2), # Phase 10
-    ("🧠",  "GNN Sistemik Risk",       2), # Phase 10
-    ("🌍",  "İklim Finansmanı",        2), # Phase 10
-    ("🤖",  "Davranışsal Finans",      2), # Phase 10
-    ("🧬",  "BioTech Ar-Ge Fiyatlama", 2), # Phase 10
-    ("🤖",  "GenAI Copilot (RAG)",     2), # Phase 11
+    ("🕷️",  "GNN Sistemik Risk",       2), # Phase 10
+    ("☁️",  "İklim Finansmanı",        2), # Phase 10
+    ("💡",  "Davranışsal Finans",      2), # Phase 10
+    ("🔬",  "BioTech Ar-Ge Fiyatlama", 2), # Phase 10
+    ("🗣️",  "GenAI Copilot (RAG)",     2), # Phase 11
     ("🏢",  "Global REIT Simulator",   2), # Phase 11
-    ("🛡️",  "Siber Risk & Aktüerya",   2), # Phase 11
+    ("🔒",  "Siber Risk & Aktüerya",   2), # Phase 11
     ("⛴️",  "Tedarik Zinciri & Kriz",  2), # Phase 11
     ("🦄",  "Private Equity Değerleme", 2), # Phase 11
-    ("🧠",  "Neuromorphic BCI Trading", 2), # Phase 12
+    ("🧬",  "Neuromorphic BCI Trading", 2), # Phase 12
     ("⚛️",  "Nükleer Şebeke Elektriği", 2), # Phase 12
-    ("🤖",  "Otonom AI Servet Kasası", 2), # Phase 12
+    ("🏆",  "Otonom AI Servet Kasası", 2), # Phase 12
     ("🌾",  "Agri-Tech & Biyosfer",    2), # Phase 12
     ("🏛️",  "Ülke Varlık Fonu Orkestrası", 2), # Phase 12
-    ("📈",  "Piyasa Rejimi Analizi",   2), # Phase 5
-    ("🔬",  "Mikro Yapı & Likidite",   2), # Phase 5
-    ("⚖️",  "Portföy Optimizasyonu",   2), # Phase 5
-    ("📊",  "Strateji Backtest Raporu", 2), # Phase 5
+    ("📻",  "Piyasa Rejimi Analizi",   2), # Phase 5
+    ("🔭",  "Mikro Yapı & Likidite",   2), # Phase 5
+    ("⚙️",  "Portföy Optimizasyonu",   2), # Phase 5
+    ("📊",  "Strateji Backtest Raporu", 2), # Phase 5  — farklı label, emoji ortak olabilir
     ("🔐",  "Yönetişim & Denetim",    3), # Phase 5
     ("📋",  "Denetim İzi & Loglar",    2),
     ("📄",  "Raporlama Merkezi",       1),
-    ("⚙️",  "Model Yönetimi",          3),
+    ("🛠️",  "Model Yönetimi",          3),
     # Institutional Hubs (Bridge the Apex Gap)
     ("🕹️",  "Komuta Merkezi",           2),
-    ("🧬",  "Analist Laboratuvarı",     2),
-    ("⚖️",  "Denetim Portalı",           2),
+    ("🧪",  "Analist Laboratuvarı",     2),
+    ("🏅",  "Denetim Portalı",           2),
 ]
 
 

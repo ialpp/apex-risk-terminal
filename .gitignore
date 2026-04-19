@@ -41,8 +41,11 @@ desktop.ini
 .ipynb_checkpoints/
 *.ipynb
 
-# Model dosyaları (büyük olabilir)
-*.pkl
+# Model dosyaları
+# NOT: .pkl dosyaları Streamlit Cloud deploy için Git'te tutulur.
+# Eğer dosya boyutu 100MB'ı geçerse git-lfs kullanın:
+#   git lfs track "*.pkl"
+# Şimdilik sadece .h5 ve PyTorch formatları hariç tutulmuştur:
 *.h5
 *.pt
 *.pth
