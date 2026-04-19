@@ -92,14 +92,11 @@ class BondPricer:
         price = BondPricer.price_from_ytm(bond, ytm)
         mac_dur = 0.0
         for t in range(1, periods + 1):
-            is_last = (t == periods)
-            cf = (coupon + bond.face_value) if is_last else coupon
-            discount = (1.0 + period_rate) ** t
-            pv_cf = cf / discount
-            weight = (t / bond.frequency) / price
-            mac_dur += weight * pv_cf
+            cf = coupon if t < periods else coupon + bond.face_value
+            pv_cf = cf / (1 + period_rate) ** t
+            mac_dur += (t / bond.frequency) * pv_cf / price
 
-        return mac_dur / (1.0 + period_rate)   # Modifiye Duration
+        return mac_dur / (1 + period_rate)   # Modifiye Duration
 
     @staticmethod
     def convexity(bond: Bond, ytm: float) -> float:
