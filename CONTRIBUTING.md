@@ -18,7 +18,7 @@ Bu belge, projeye nasıl katkıda bulunabileceğinizi açıklar.
 
 ```bash
 # Repoyu fork'layıp klonlayın
-git clone https://github.com/YOUR_USERNAME/apex-risk-terminal.git
+git clone https://github.com/ialpp/apex-risk-terminal.git
 cd apex-risk-terminal
 
 # Sanal ortam oluşturun
@@ -204,7 +204,7 @@ Fixes #<issue_number>
 
 ## 📬 İletişim
 
-Sorularınız için [GitHub Issues](https://github.com/YOUR_USERNAME/apex-risk-terminal/issues) kullanın.
+Sorularınız için [GitHub Issues](https://github.com/ialpp/apex-risk-terminal/issues) kullanın.
 
 ---
 
