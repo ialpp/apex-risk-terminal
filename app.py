@@ -320,7 +320,7 @@ def render_sidebar(user_info: dict) -> str:
     # Seçilen sayfanın etiketini döndür (Akademi gibi ikonları olmayan istisnalar eklendi)
     current_label_raw = st.session_state.get("current_page_label", "Yönetici Özeti")
     
-    if current_label_raw in ["Akademi", "Hakkımızda", "İletişim"]:
+    if current_label_raw in ["Akademi", "Hakkımızda", "İletişim", "Sistem Ayarları"]:
         return current_label_raw
         
     for icon, label, _ in NAV_ITEMS:
