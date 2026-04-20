@@ -7,8 +7,11 @@ Kimlik Doğrulama & Oturum Yönetimi Sistemi
 import streamlit as st
 import time
 import re
+import random
+import string
 from datetime import datetime, timedelta
 from core.database_handler import db
+from core.email_service import send_otp_email, send_password_reset_email
 from config import SESSION_TIMEOUT_MINS, PASSWORD_MIN_LENGTH, ROLES
 
 
@@ -220,3 +223,48 @@ def role_badge(role: str) -> str:
     info = ROLES.get(role, {"color": "#94a3b8"})
     color = info["color"]
     return f'<span style="background:{color}22; color:{color}; padding:2px 10px; border-radius:20px; font-size:0.75rem; font-weight:600; border:1px solid {color}55;">{role}</span>'
+
+
+# ─────────────────────────────────────────────
+#  GERÇEK DÜNYA GÜVENLİK FONKSİYONLARI
+# ─────────────────────────────────────────────
+
+def generate_otp() -> str:
+    """6 haneli rastgele OTP kodu üretir."""
+    return "".join(random.choices(string.digits, k=6))
+
+def send_2fa_otp(user_info: dict) -> bool:
+    """Kullanıcının mailine OTP gönderir ve session_state'e kaydeder."""
+    email = user_info.get("email")
+    if not email:
+        return False
+    
+    otp = generate_otp()
+    st.session_state["correct_otp"] = otp
+    st.session_state["otp_expiry"] = datetime.now() + timedelta(minutes=5)
+    
+    return send_otp_email(email, otp)
+
+def reset_password_request(identifier: str) -> dict:
+    """Şifre sıfırlama talebi alır, geçici şifre üretir ve gönderir."""
+    user = db.get_user_by_identifier(identifier)
+    if not user:
+        return {"success": False, "message": "Kullanıcı bulunamadı."}
+    
+    email = user.get("email")
+    if not email:
+        return {"success": False, "message": "Kullanıcının kayıtlı e-posta adresi yok."}
+    
+    # Geçici şifre üret (8 karakter, harf ve rakam)
+    temp_pass = "".join(random.choices(string.ascii_letters + string.digits, k=8))
+    
+    # Veritabanında şifreyi güncelle
+    db.update_user_password(user["username"], temp_pass)
+    
+    # Mail gönder
+    sent = send_password_reset_email(email, temp_pass)
+    
+    if sent:
+        return {"success": True, "message": "Geçici şifreniz e-posta adresinize gönderildi."}
+    else:
+        return {"success": False, "message": "E-posta gönderimi sırasında bir hata oluştu."}

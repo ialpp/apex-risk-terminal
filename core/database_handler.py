@@ -508,6 +508,18 @@ class DatabaseHandler:
         conn.close()
         return None
 
+    def get_user_by_identifier(self, identifier: str) -> dict | None:
+        """Kullanıcı adı veya e-posta ile kullanıcıyı getirir."""
+        conn = self.get_connection()
+        c = conn.cursor()
+        c.execute("""
+            SELECT id, username, role, full_name, email, department, is_active
+            FROM users WHERE username=? OR email=?
+        """, (identifier, identifier))
+        user = c.fetchone()
+        conn.close()
+        return dict(user) if user else None
+
     def get_all_users(self) -> pd.DataFrame:
         conn = self.get_connection()
         df = pd.read_sql_query(

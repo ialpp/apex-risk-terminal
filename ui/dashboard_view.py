@@ -6,8 +6,9 @@ Ultra-premium institutional analytics dashboard
 import streamlit as st
 import plotly.graph_objects as go
 import plotly.express as px
-import pandas as pd
 import textwrap
+import yfinance as yf
+from datetime import datetime, timedelta
 from core.database_handler import db
 from ui.theme import kpi_card_html, get_risk_label, get_risk_color, section_header_html
 from config import SCORE_BANDS
@@ -78,9 +79,60 @@ def _plotly_layout(t: dict, height: int = 320) -> dict:
     )
 
 
+@st.cache_data(ttl=600)
+def _get_live_market_data():
+    """yfinance üzerinden anlık piyasa verilerini çeker."""
+    symbols = {
+        "USD/TRY": "USDTRY=X",
+        "BIST 100": "XU100.IS",
+        "Altın": "GC=F",
+        "S&P 500": "^GSPC"
+    }
+    results = []
+    for label, sym in symbols.items():
+        try:
+            ticker = yf.Ticker(sym)
+            # info yerine fast_info kullanımı daha hızlı ve stabil
+            price = ticker.fast_info['last_price']
+            prev_close = ticker.fast_info['previous_close']
+            change = ((price - prev_close) / prev_close) * 100 if prev_close else 0
+            results.append({"label": label, "price": price, "change": change})
+        except Exception:
+            results.append({"label": label, "price": 0, "change": 0})
+    return results
+
+
 def render_dashboard(user_info: dict):
     t = _get_theme()
     is_dark = st.session_state.get("theme", "dark") == "dark"
+
+    # ── Market Ribbon (Live) ──────────────────────────────────────
+    market_data = _get_live_market_data()
+    market_items_html = ""
+    for item in market_data:
+        color = "#10B981" if item['change'] >= 0 else "#F43F5E"
+        sign = "+" if item['change'] >= 0 else ""
+        icon = "▲" if item['change'] >= 0 else "▼"
+        formatted_price = f"{item['price']:,.2f}" if item['price'] < 100 else f"{item['price']:,.0f}"
+        market_items_html += f"""
+        <div style="display:flex; align-items:center; gap:8px; padding-right:20px; border-right:1px solid rgba(255,255,255,0.05);">
+            <span style="color:{t['muted']}; font-size:0.7rem; font-weight:700;">{item['label']}</span>
+            <span style="color:{t['text_strong']}; font-size:0.8rem; font-weight:800;">{formatted_price}</span>
+            <span style="color:{color}; font-size:0.68rem; font-weight:700;">{icon} {sign}{item['change']:.2f}%</span>
+        </div>
+        """
+
+    st.markdown(textwrap.dedent(f"""
+    <div style="
+        background: rgba({t['primary_rgb']}, 0.03);
+        border: 1px solid rgba({t['primary_rgb']}, 0.1);
+        border-radius: 10px; padding: 0.5rem 1rem;
+        margin-bottom: 1.5rem; display: flex; overflow-x: auto;
+        gap: 20px; white-space: nowrap; scrollbar-width: none;
+    ">
+        {market_items_html}
+    </div>
+    """), unsafe_allow_html=True)
 
     # ── Page Header ────────────────────────────────────────────────
     full_name = user_info.get("full_name", "—")

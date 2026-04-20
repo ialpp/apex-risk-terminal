@@ -10,7 +10,10 @@ import textwrap
 import urllib.request
 import json
 import datetime
-from core.auth_system import login, analyze_password_strength, render_password_strength
+from core.auth_system import (
+    login, analyze_password_strength, render_password_strength,
+    send_2fa_otp, reset_password_request
+)
 from core.database_handler import db
 from config import APP_NAME, APP_VERSION
 
@@ -371,6 +374,27 @@ def render_login_screen():
         st.markdown('</div>', unsafe_allow_html=True)
 
 
+@st.dialog("🔑 Şifre Sıfırlama Merkezi")
+def _render_forgot_password_dialog():
+    st.write("Hesabınıza erişemiyor musunuz?")
+    st.caption("Kayıtlı e-posta adresinizi veya kullanıcı adınızı girin. Size geçici bir şifre göndereceğiz.")
+    
+    identifier = st.text_input("E-posta veya Kullanıcı Adı", placeholder="örnek@kurum.com")
+    
+    if st.button("Şifre Sıfırlama Bağlantısı Gönder", use_container_width=True, type="primary"):
+        if not identifier:
+            st.error("Lütfen e-posta veya kullanıcı adı girin.")
+            return
+            
+        with st.spinner("İşlem yapılıyor..."):
+            res = reset_password_request(identifier)
+            if res["success"]:
+                st.success(res["message"])
+                time.sleep(2)
+                st.rerun()
+            else:
+                st.error(res["message"])
+
 def _render_login_form():
     """Premium giriş formu."""
     st.markdown("<div style='height:0.5rem;'></div>", unsafe_allow_html=True)
@@ -396,10 +420,10 @@ def _render_login_form():
             unsafe_allow_html=True
         )
     with col_forgot:
-        st.markdown(
-            "<div style='text-align:right; font-size:0.78rem;'><a href='#' style='color:#38BDF8; text-decoration:none;'>Şifremi Unuttum</a></div>",
-            unsafe_allow_html=True
-        )
+        st.markdown("<div style='text-align:right; margin-top:2px;'>", unsafe_allow_html=True)
+        if st.button("Şifremi Unuttum", key="btn_forgot", type="tertiary"):
+             _render_forgot_password_dialog()
+        st.markdown("</div>", unsafe_allow_html=True)
 
     st.markdown("<div style='height:0.75rem;'></div>", unsafe_allow_html=True)
 
@@ -413,11 +437,17 @@ def _render_login_form():
             result = login(username.strip(), password)
 
         if result["success"]:
-            st.session_state["temp_user"] = result["user"]
-            st.session_state["login_stage"] = "2fa"
-            st.success("✅ Kimlik Doğrulandı. Güvenlik katmanı yükleniyor...")
-            time.sleep(0.6)
-            st.rerun()
+            user_info = result["user"]
+            st.session_state["temp_user"] = user_info
+            
+            with st.spinner("Güvenlik kodu gönderiliyor..."):
+                if send_2fa_otp(user_info):
+                    st.session_state["login_stage"] = "2fa"
+                    st.success(f"✅ Kimlik Doğrulandı. {user_info['email']} adresine kod gönderildi.")
+                    time.sleep(1)
+                    st.rerun()
+                else:
+                    st.error("❌ Güvenlik kodu gönderilemedi. Lütfen sistem yöneticisiyle iletişime geçin.")
         else:
             st.error("❌ Kullanıcı adı veya şifre hatalı.")
 
@@ -509,11 +539,20 @@ def _render_2fa_stage():
             st.rerun()
     with c2:
         if st.button("Doğrula & Gir", use_container_width=True, type="primary"):
-            if otp_code == "123456":
+            correct_otp = st.session_state.get("correct_otp")
+            if not correct_otp:
+                st.error("Kod süresi dolmuş veya hatalı oturum.")
+                return
+
+            if otp_code == correct_otp:
                 # Gerçek oturumu başlat
                 st.session_state["authenticated"] = True
                 st.session_state["user_info"] = st.session_state["temp_user"]
                 st.success("🔓 Erişim sağlandı. Hoş geldiniz.")
+                
+                # OTP verilerini temizle
+                if "correct_otp" in st.session_state: del st.session_state["correct_otp"]
+                
                 time.sleep(0.5)
                 st.rerun()
             else:
