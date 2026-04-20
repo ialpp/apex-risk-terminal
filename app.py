@@ -807,7 +807,8 @@ def render_apex_header(user_info: dict):
         /* Top tier link buttons */
         div.element-container:has(#nav-akademi) + div.element-container button,
         div.element-container:has(#nav-hakkimizda) + div.element-container button,
-        div.element-container:has(#nav-iletisim) + div.element-container button {{
+        div.element-container:has(#nav-iletisim) + div.element-container button,
+        div.element-container:has(#nav-ayarlar) + div.element-container button {{
             background: transparent !important;
             border: none !important;
             color: {t_muted} !important;
@@ -821,7 +822,8 @@ def render_apex_header(user_info: dict):
         }}
         div.element-container:has(#nav-akademi) + div.element-container button:hover,
         div.element-container:has(#nav-hakkimizda) + div.element-container button:hover,
-        div.element-container:has(#nav-iletisim) + div.element-container button:hover {{
+        div.element-container:has(#nav-iletisim) + div.element-container button:hover,
+        div.element-container:has(#nav-ayarlar) + div.element-container button:hover {{
             color: {t_primary} !important;
             background: rgba({t_prgb}, 0.08) !important;
         }}
@@ -853,9 +855,9 @@ def render_apex_header(user_info: dict):
         </style>
     """), unsafe_allow_html=True)
 
-    # Linkleri sağa (lang_col4, lang_col5, lang_col6) itiyoruz, sola ise spacer koyuyoruz
+    # Linkleri sağa itiyoruz, sola ise spacer koyuyoruz
     st.markdown("<div style='position: relative; height: 0; z-index: 999999;'>", unsafe_allow_html=True)
-    lang_col_spacer, lang_col1, lang_col2, lang_col3, lang_col4 = st.columns([8, 1.2, 1.2, 1.2, 1.2])
+    lang_col_spacer, lang_col1, lang_col2, lang_col3, lang_col4, lang_col5 = st.columns([7.5, 1.2, 1.2, 1.2, 1.1, 0.6])
     
     with lang_col_spacer:
         st.write("") # Sola boş alan bırakıp sağa itiyoruz
@@ -888,6 +890,11 @@ def render_apex_header(user_info: dict):
                 st.toast(f"Translation engine applied for {chosen_lang}. (Module contents rendering in native language...)", icon="🌐")
             st.rerun()
         st.markdown("</div>", unsafe_allow_html=True)
+        
+    with lang_col5:
+        st.markdown("<div id='nav-ayarlar' style='margin-top: -3.5rem;'></div>", unsafe_allow_html=True)
+        if st.button("⚙️", use_container_width=True, help="Ayarlar (Yakında)"):
+            st.toast("Ayarlar menüsü yapılandırılıyor...", icon="⚙️")
         
     st.markdown("</div>", unsafe_allow_html=True)
 
