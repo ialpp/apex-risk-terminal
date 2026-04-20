@@ -1,4 +1,5 @@
 import smtplib
+import ssl
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import streamlit as st
@@ -7,37 +8,43 @@ import textwrap
 def send_email(to_email: str, subject: str, body_html: str):
     """
     SMTP üzerinden e-posta gönderir.
-    Ayarlar .streamlit/secrets.toml içindeki [email] bölümünden okunur.
+    Zaman aşımı ve SSL sertifika desteği eklendi.
     """
     try:
-        # Secrets'tan ayarları al
         email_config = st.secrets.get("email", {})
         smtp_server = email_config.get("smtp_server")
-        smtp_port = email_config.get("smtp_port", 587)
+        smtp_port = email_config.get("smtp_port", 465)
         smtp_user = email_config.get("smtp_user")
         smtp_pass = email_config.get("smtp_pass")
 
         if not all([smtp_server, smtp_user, smtp_pass]):
-            st.error("❌ SMTP ayarları (.streamlit/secrets.toml) eksik! Lütfen yapılandırın.")
+            st.error("❌ secrets.toml içinde [email] ayarları eksik!")
             return False
 
-        # Mesajı oluştur
         msg = MIMEMultipart()
         msg['From'] = f"Apex Risk Terminal <{smtp_user}>"
         msg['To'] = to_email
         msg['Subject'] = subject
-
         msg.attach(MIMEText(body_html, 'html'))
 
-        # Sunucuya bağlan ve gönder
-        with smtplib.SMTP(smtp_server, smtp_port) as server:
-            server.starttls()
+        # Güvenlik Protokolleri
+        context = ssl.create_default_context()
+
+        # Sunucuya bağlan (10 saniye limit eklendi)
+        if smtp_port == 465:
+            server = smtplib.SMTP_SSL(smtp_server, smtp_port, context=context, timeout=10)
+        else:
+            server = smtplib.SMTP(smtp_server, smtp_port, timeout=10)
+            server.starttls(context=context)
+
+        with server:
             server.login(smtp_user, smtp_pass)
             server.send_message(msg)
         
         return True
     except Exception as e:
-        st.error(f"E-posta gönderim hatası: {e}")
+        st.error(f"⚠️ E-posta Gönderim Hatası (Port {smtp_port}): {e}")
+        st.info("İpucu: Eğer 10060 hatası devam ediyorsa, Windows Güvenlik Duvarı veya Antivirüs programın Python'ın dışarıya mail atmasını engelliyor olabilir.")
         return False
 
 def send_otp_email(to_email: str, otp_code: str):
