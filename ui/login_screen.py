@@ -9,6 +9,7 @@ import os
 import textwrap
 import urllib.request
 import json
+import datetime
 from core.auth_system import login, analyze_password_strength, render_password_strength
 from core.database_handler import db
 from config import APP_NAME, APP_VERSION
@@ -579,7 +580,7 @@ def _render_security_insights():
         </div>
         <div class="insight-item">
             <span class="insight-label">Son Başarılı Giriş:</span>
-            <span class="insight-value">Bugün, 09:12</span>
+            <span class="insight-value">{datetime.datetime.now().strftime('%d.%m.%Y, %H:%M')} (Geçerli Oturum)</span>
         </div>
         <div class="insight-item">
             <span class="insight-label">Şifreleme Standartı:</span>
