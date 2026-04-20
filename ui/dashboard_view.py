@@ -7,6 +7,7 @@ import streamlit as st
 import plotly.graph_objects as go
 import plotly.express as px
 import pandas as pd
+import textwrap
 from core.database_handler import db
 from ui.theme import kpi_card_html, get_risk_label, get_risk_color, section_header_html
 from config import SCORE_BANDS
@@ -90,7 +91,7 @@ def render_dashboard(user_info: dict):
     hour = datetime.datetime.now().hour
     greeting = "Günaydın" if hour < 12 else "İyi Öğlenler" if hour < 17 else "İyi Akşamlar"
 
-    st.markdown(f"""
+    st.markdown(textwrap.dedent(f"""
     <div style="margin-bottom: 2rem;">
         <div style="
             display: flex; align-items: flex-start;
@@ -150,7 +151,7 @@ def render_dashboard(user_info: dict):
         70%       {{ box-shadow: 0 0 0 6px rgba(16,185,129,0); }}
     }}
     </style>
-    """, unsafe_allow_html=True)
+    """), unsafe_allow_html=True)
 
     # ── KPI Stats ─────────────────────────────────────────────────
     stats = db.get_portfolio_stats()
@@ -325,7 +326,7 @@ def render_dashboard(user_info: dict):
                 icon  = sev_icons.get(sev, "○")
                 name  = w.get("full_name") or w.get("customer_code", "?")
                 rgb   = "244,63,94" if sev=="Kritik" else "245,158,11" if sev=="Yüksek" else "56,189,248" if sev=="Orta" else "100,116,139"
-                st.markdown(f"""
+                st.markdown(textwrap.dedent(f"""
                 <div style="
                     background: rgba({rgb}, 0.06);
                     border: 1px solid rgba({rgb}, 0.2);
@@ -353,7 +354,7 @@ def render_dashboard(user_info: dict):
                         {w.get('warning_type', '')}
                     </div>
                 </div>
-                """, unsafe_allow_html=True)
+                """), unsafe_allow_html=True)
 
     with col_log:
         st.markdown(section_header_html("📋", "Son İşlem Kayıtları",
@@ -399,7 +400,7 @@ def render_dashboard(user_info: dict):
         ">{item}</div>
         """
 
-    st.markdown(f"""
+    st.markdown(textwrap.dedent(f"""
     <div style="
         background: {t['card_bg']};
         border: 1px solid {t['card_border']};
@@ -420,4 +421,4 @@ def render_dashboard(user_info: dict):
             {btns_html}
         </div>
     </div>
-    """, unsafe_allow_html=True)
+    """), unsafe_allow_html=True)

@@ -6,6 +6,7 @@ Premium glassmorphism login with animated backgrounds
 import streamlit as st
 import time
 import os
+import textwrap
 from core.auth_system import login, analyze_password_strength, render_password_strength
 from core.database_handler import db
 from config import APP_NAME, APP_VERSION
@@ -18,7 +19,7 @@ def render_login_screen():
     _BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     logo_path = os.path.join(_BASE_DIR, "assets", "logo.png")
 
-    st.markdown("""
+    st.markdown(textwrap.dedent("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
@@ -288,7 +289,6 @@ def render_login_screen():
         to { opacity: 1; transform: translateY(0); }
     }
     </style>
-    
     """, unsafe_allow_html=True)
 
     # ─── Initialization ────────────────────────────────────────────
@@ -312,12 +312,12 @@ def render_login_screen():
             st.image(logo_path, width=220)
             st.markdown("</div>", unsafe_allow_html=True)
         else:
-            st.markdown(f"""
+            st.markdown(textwrap.dedent(f"""
             <div class="login-brand">
                 <div class="login-brand-name">{APP_NAME}</div>
                 <div class="login-brand-sub">Institutional Risk Terminal</div>
             </div>
-            """, unsafe_allow_html=True)
+            """), unsafe_allow_html=True)
 
         # Status Bar Animation
         st.markdown("""
@@ -418,7 +418,7 @@ def _render_login_form():
         else:
             st.error("❌ Kullanıcı adı veya şifre hatalı.")
 
-    st.markdown("""
+    st.markdown(textwrap.dedent("""
     <div style="margin-top:1.5rem; padding:0.9rem 1rem;
                 background: rgba(56,189,248,0.05);
                 border: 1px solid rgba(56,189,248,0.12);
@@ -432,7 +432,7 @@ def _render_login_form():
             <code style="color:#94A3B8;">analist</code> / <code style="color:#94A3B8;">analist123</code>
         </div>
     </div>
-    """, unsafe_allow_html=True)
+    """), unsafe_allow_html=True)
 
 
 def _render_register_form():
@@ -525,7 +525,7 @@ def _render_2fa_stage():
 
 def _render_security_insights():
     """Giriş ekranı için güvenlik istatistikleri ve meta veriler."""
-    st.markdown(f"""
+    st.markdown(textwrap.dedent(f"""
     <div class="insights-panel">
         <div style="font-size:0.75rem; font-weight:700; color:#94A3B8; margin-bottom:1rem; text-transform:uppercase; letter-spacing:0.05em;">
             🛡️ Terminal Güvenlik İzlemesi
@@ -547,4 +547,4 @@ def _render_security_insights():
             <span class="insight-value">FIPS 140-2</span>
         </div>
     </div>
-    """, unsafe_allow_html=True)
+    """), unsafe_allow_html=True)

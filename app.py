@@ -12,6 +12,7 @@ if sys.stdout.encoding.lower() != 'utf-8':
     sys.stderr.reconfigure(encoding='utf-8')
 
 import streamlit as st
+import textwrap
 from config import APP_NAME, APP_VERSION, ROLES
 
 # ── En başta sayfa konfigürasyonu ────────────────────────────────
@@ -193,7 +194,7 @@ def render_sidebar(user_info: dict) -> str:
         grad2     = t.get("gradient2", "#6366F1")
 
         # ── Brand Block ──────────────────────────────────────────────
-        st.markdown(f"""
+        st.markdown(textwrap.dedent(f"""
         <div style="
             background: linear-gradient(135deg, rgba(56,189,248,0.08), rgba(99,102,241,0.05));
             border-bottom: 1px solid {border};
@@ -209,11 +210,11 @@ def render_sidebar(user_info: dict) -> str:
             <div style="font-size:0.65rem; color:{muted}; font-weight:600;
                         letter-spacing:0.12em; text-transform:uppercase;">Risk Terminal v5.0</div>
         </div>
-        """, unsafe_allow_html=True)
+        """), unsafe_allow_html=True)
 
         # ── Model Durumu ──────────────────────────────────────────────
         if engine.is_trained():
-            st.markdown(f"""
+            st.markdown(textwrap.dedent(f"""
             <div style="background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.25);
                         border-radius:9px; padding:0.55rem 0.8rem; margin-bottom:0.75rem;
                         display:flex; align-items:center; gap:0.5rem;">
@@ -222,15 +223,15 @@ def render_sidebar(user_info: dict) -> str:
               <span style="font-size:0.75rem; color:#10B981; font-weight:700;">AI Motor Aktif</span>
             </div>
             <style>@keyframes sdPulse{{0%,100%{{box-shadow:0 0 0 0 rgba(16,185,129,.6)}}70%{{box-shadow:0 0 0 5px rgba(16,185,129,0)}}}}</style>
-            """, unsafe_allow_html=True)
+            """), unsafe_allow_html=True)
         else:
-            st.markdown(f"""
+            st.markdown(textwrap.dedent(f"""
             <div style="background:rgba(244,63,94,0.08); border:1px solid rgba(244,63,94,0.25);
                         border-radius:9px; padding:0.55rem 0.8rem; margin-bottom:0.75rem;">
               <div style="color:#F43F5E; font-size:0.75rem; font-weight:700;">⚠️ Model Eğitilmedi</div>
               <div style="font-size:0.65rem; color:{muted}; margin-top:2px;">Model Yönetimi → Eğit</div>
             </div>
-            """, unsafe_allow_html=True)
+            """), unsafe_allow_html=True)
 
         # Navigasyon
         from core.auth_system import get_role_level
@@ -272,7 +273,7 @@ def render_sidebar(user_info: dict) -> str:
         role_color = ROLES.get(role, {}).get("color", "#6366F1")
         initials   = "".join(w[0].upper() for w in full_name.split()[:2])
 
-        st.markdown(f"""
+        st.markdown(textwrap.dedent(f"""
         <div style="
             background: linear-gradient(135deg, rgba(56,189,248,0.06), rgba(99,102,241,0.04));
             border: 1px solid {border};
@@ -299,7 +300,7 @@ def render_sidebar(user_info: dict) -> str:
             {role_badge(role)}
           </div>
         </div>
-        """, unsafe_allow_html=True)
+        """), unsafe_allow_html=True)
 
         # ── Tema Toggle ────────────────────────────────────────────────
         cur_theme = st.session_state.get("theme", "dark")
@@ -768,7 +769,7 @@ def render_apex_header(user_info: dict):
     t_grad2   = t_pal.get("gradient2", "#6366F1")
     t_prgb    = t_pal.get("primary_rgb", "56, 189, 248")
 
-    st.markdown(f"""
+    st.markdown(textwrap.dedent(f"""
         <style>
         .apex-header {{ display: none !important; }}
 
@@ -850,7 +851,7 @@ def render_apex_header(user_info: dict):
         <style>
         @keyframes hdrPulse{{0%,100%{{box-shadow:0 0 0 0 rgba(16,185,129,.6)}}70%{{box-shadow:0 0 0 5px rgba(16,185,129,0)}}}}
         </style>
-    """, unsafe_allow_html=True)
+    """), unsafe_allow_html=True)
 
     # Linkleri sağa (lang_col4, lang_col5, lang_col6) itiyoruz, sola ise spacer koyuyoruz
     st.markdown("<div style='position: relative; height: 0; z-index: 999999;'>", unsafe_allow_html=True)
@@ -899,7 +900,7 @@ def render_apex_header(user_info: dict):
         if os.path.exists(logo_path):
             st.image(logo_path, width=185)
         else:
-            st.markdown(f"""
+            st.markdown(textwrap.dedent(f"""
             <div style="padding: 0.25rem 0;">
                 <span style="
                     font-size: 1.2rem; font-weight: 900;
@@ -908,7 +909,7 @@ def render_apex_header(user_info: dict):
                     background-clip: text; letter-spacing: -0.5px;
                 ">{APP_NAME}</span>
             </div>
-            """, unsafe_allow_html=True)
+            """), unsafe_allow_html=True)
 
     with c2:
         st.markdown("<div class='nav-popovers' style='display:flex; gap:0.5rem; justify-content:center; align-items:center; padding-top:0.6rem;'>", unsafe_allow_html=True)
