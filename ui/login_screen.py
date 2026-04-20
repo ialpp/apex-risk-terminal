@@ -525,7 +525,6 @@ def _render_2fa_stage():
     """, unsafe_allow_html=True)
 
 
-@st.cache_data(ttl=3600)
 def _get_client_location_info() -> str:
     """Gerçek IP ve lokasyon bilgisini çeker. Eğer başarısız olursa proxy bilgisini döner."""
     try:
@@ -535,6 +534,8 @@ def _get_client_location_info() -> str:
             headers = st.context.headers
             if "X-Forwarded-For" in headers:
                 client_ip = headers["X-Forwarded-For"].split(",")[0].strip()
+            elif "X-Real-Ip" in headers:
+                client_ip = headers["X-Real-Ip"].strip()
         
         # Eğer Header'dan alınamadıysa, sunucu/dış IP yap (Cloud IP'si gelir)
         if not client_ip:
@@ -558,7 +559,10 @@ def _get_client_location_info() -> str:
 def _render_security_insights():
     """Giriş ekranı için güvenlik istatistikleri ve meta veriler."""
     
-    loc_info = _get_client_location_info()
+    if "client_loc" not in st.session_state:
+        st.session_state["client_loc"] = _get_client_location_info()
+        
+    loc_info = st.session_state["client_loc"]
     
     st.markdown(textwrap.dedent(f"""
     <div class="insights-panel">
