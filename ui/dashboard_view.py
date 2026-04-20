@@ -114,25 +114,20 @@ def render_dashboard(user_info: dict):
         sign = "+" if item['change'] >= 0 else ""
         icon = "▲" if item['change'] >= 0 else "▼"
         formatted_price = f"{item['price']:,.2f}" if item['price'] < 100 else f"{item['price']:,.0f}"
-        market_items_html += f"""
-        <div style="display:flex; align-items:center; gap:8px; padding-right:20px; border-right:1px solid rgba(255,255,255,0.05);">
-            <span style="color:{t['muted']}; font-size:0.7rem; font-weight:700;">{item['label']}</span>
-            <span style="color:{t['text_strong']}; font-size:0.8rem; font-weight:800;">{formatted_price}</span>
-            <span style="color:{color}; font-size:0.68rem; font-weight:700;">{icon} {sign}{item['change']:.2f}%</span>
-        </div>
-        """
+        market_items_html += (
+            f'<div style="display:flex; align-items:center; gap:8px; padding-right:20px; border-right:1px solid rgba(255,255,255,0.05);">'
+            f'<span style="color:{t["muted"]}; font-size:0.7rem; font-weight:700;">{item["label"]}</span>'
+            f'<span style="color:{t["text_strong"]}; font-size:0.8rem; font-weight:800;">{formatted_price}</span>'
+            f'<span style="color:{color}; font-size:0.68rem; font-weight:700;">{icon} {sign}{item["change"]:.2f}%</span>'
+            f'</div>'
+        )
 
-    st.markdown(textwrap.dedent(f"""
-    <div style="
-        background: rgba({t['primary_rgb']}, 0.03);
-        border: 1px solid rgba({t['primary_rgb']}, 0.1);
-        border-radius: 10px; padding: 0.5rem 1rem;
-        margin-bottom: 1.5rem; display: flex; overflow-x: auto;
-        gap: 20px; white-space: nowrap; scrollbar-width: none;
-    ">
-        {market_items_html}
-    </div>
-    """), unsafe_allow_html=True)
+    st.markdown(
+        f'<div style="background: rgba({t["primary_rgb"]}, 0.03); border: 1px solid rgba({t["primary_rgb"]}, 0.1); '
+        f'border-radius: 10px; padding: 0.5rem 1rem; margin-bottom: 1.5rem; display: flex; overflow-x: auto; '
+        f'gap: 20px; white-space: nowrap; scrollbar-width: none;">{market_items_html}</div>',
+        unsafe_allow_html=True
+    )
 
     # ── Page Header ────────────────────────────────────────────────
     full_name = user_info.get("full_name", "—")
