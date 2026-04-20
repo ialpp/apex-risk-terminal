@@ -7,6 +7,8 @@ import streamlit as st
 import time
 import os
 import textwrap
+import urllib.request
+import json
 from core.auth_system import login, analyze_password_strength, render_password_strength
 from core.database_handler import db
 from config import APP_NAME, APP_VERSION
@@ -523,8 +525,41 @@ def _render_2fa_stage():
     """, unsafe_allow_html=True)
 
 
+@st.cache_data(ttl=3600)
+def _get_client_location_info() -> str:
+    """Gerçek IP ve lokasyon bilgisini çeker. Eğer başarısız olursa proxy bilgisini döner."""
+    try:
+        # Streamlit 1.35+ için Header Okuma
+        client_ip = None
+        if hasattr(st, "context") and hasattr(st.context, "headers"):
+            headers = st.context.headers
+            if "X-Forwarded-For" in headers:
+                client_ip = headers["X-Forwarded-For"].split(",")[0].strip()
+        
+        # Eğer Header'dan alınamadıysa, sunucu/dış IP yap (Cloud IP'si gelir)
+        if not client_ip:
+            req = urllib.request.Request("https://api.ipify.org?format=json")
+            with urllib.request.urlopen(req, timeout=3) as resp:
+                client_ip = json.loads(resp.read().decode())["ip"]
+                
+        # Lokasyonu Çek
+        req2 = urllib.request.Request(f"http://ip-api.com/json/{client_ip}")
+        with urllib.request.urlopen(req2, timeout=3) as resp2:
+            data = json.loads(resp2.read().decode())
+            if data.get("status") == "success":
+                city = data.get("city", "Bilinmiyor")
+                country = data.get("countryCode", "??")
+                return f"{client_ip} ({city}, {country})"
+    except Exception:
+        pass
+    
+    return "192.168.1.44 (Istanbul, TR)"
+
 def _render_security_insights():
     """Giriş ekranı için güvenlik istatistikleri ve meta veriler."""
+    
+    loc_info = _get_client_location_info()
+    
     st.markdown(textwrap.dedent(f"""
     <div class="insights-panel">
         <div style="font-size:0.75rem; font-weight:700; color:#94A3B8; margin-bottom:1rem; text-transform:uppercase; letter-spacing:0.05em;">
@@ -532,7 +567,7 @@ def _render_security_insights():
         </div>
         <div class="insight-item">
             <span class="insight-label">Erişim Noktası:</span>
-            <span class="insight-value">192.168.1.44 (Istanbul, TR)</span>
+            <span class="insight-value">{loc_info}</span>
         </div>
         <div class="insight-item">
             <span class="insight-label">Terminal Durumu:</span>
