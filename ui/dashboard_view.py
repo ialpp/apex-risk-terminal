@@ -481,42 +481,62 @@ def render_dashboard(user_info: dict):
     # ── Quick Action Bar ──────────────────────────────────────────
     st.markdown("<div style='height:1.5rem;'></div>", unsafe_allow_html=True)
     
-    # Butonları ayrı oluşturup sızıntıları önleyelim
-    quick_items = ["👤 Yeni Analiz", "📊 Portföy", "🛡️ Risk Monitör", "📄 Rapor Oluştur"]
-    btns_html = ""
-    for item in quick_items:
-        btns_html += f"""
-        <div style="
-            padding: 0.45rem 0.95rem;
-            background: rgba({t['primary_rgb']}, 0.08);
-            border: 1px solid rgba({t['primary_rgb']}, 0.2);
-            border-radius: 8px;
-            font-size: 0.78rem; font-weight: 700;
-            color: {t['primary']};
-            cursor: pointer;
-            transition: all 0.2s ease;
-        ">{item}</div>
-        """
+    # ── Quick Action Bar (Functional) ──────────────────────────────
+    st.markdown("<div style='height:1.5rem;'></div>", unsafe_allow_html=True)
+    
+    # Butonlara özel CSS giydirme (Premium Look)
+    st.markdown(f"""
+        <style>
+        div[data-testid="stColumn"] > div > div > div > button {{
+            background: rgba({t['primary_rgb']}, 0.08) !important;
+            border: 1px solid rgba({t['primary_rgb']}, 0.2) !important;
+            color: {t['primary']} !important;
+            font-weight: 700 !important;
+            font-size: 0.78rem !important;
+            border-radius: 8px !important;
+            padding: 0.45rem 1rem !important;
+            transition: all 0.2s ease !important;
+            width: 100% !important;
+            height: auto !important;
+        }}
+        div[data-testid="stColumn"] > div > div > div > button:hover {{
+            background: rgba({t['primary_rgb']}, 0.15) !important;
+            border-color: {t['primary']} !important;
+            transform: translateY(-2px);
+        }}
+        </style>
+    """, unsafe_allow_html=True)
 
-    st.markdown(textwrap.dedent(f"""
+    st.markdown(f"""
     <div style="
         background: {t['card_bg']};
         border: 1px solid {t['card_border']};
         border-radius: 14px; padding: 1.25rem 1.5rem;
-        display: flex; align-items: center; justify-content: space-between;
-        flex-wrap: wrap; gap: 1rem;
         backdrop-filter: blur(20px);
+        margin-bottom: 2rem;
     ">
-        <div>
-            <div style="font-weight:800; color:{t['text_strong']}; font-size:0.9rem;">
-                ⚡ Hızlı İşlemler
-            </div>
-            <div style="font-size:0.75rem; color:{t['muted']}; margin-top:2px;">
-                En çok kullanılan modüllere hızlı erişim
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+            <div>
+                <div style="font-weight:800; color:{t['text_strong']}; font-size:0.9rem;">⚡ Hızlı İşlemler</div>
+                <div style="font-size:0.75rem; color:{t['muted']}; margin-top:2px;">En çok kullanılan modüllere anlık erişim</div>
             </div>
         </div>
-        <div style="display:flex; gap:0.65rem; flex-wrap:wrap;">
-            {btns_html}
-        </div>
-    </div>
-    """), unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
+
+    c1, c2, c3, c4 = st.columns(4)
+    
+    actions = [
+        (c1, "👤 Yeni Analiz", "👤  Yeni Müşteri Analizi"),
+        (c2, "📊 Portföy",     "🗃️  Portföy Yönetimi"),
+        (c3, "🛡️ Risk Monitör", "📡  Canlı Risk Monitörü"),
+        (c4, "📄 Rapor Oluştur", "📄  Raporlama Merkezi")
+    ]
+
+    for col, label, target in actions:
+        with col:
+            if st.button(label, use_container_width=True):
+                st.session_state["nav_select_box"] = target
+                st.session_state["current_page_label"] = target
+                st.rerun()
+
+    st.markdown("</div>", unsafe_allow_html=True)
