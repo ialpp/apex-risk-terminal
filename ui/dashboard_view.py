@@ -17,6 +17,7 @@ def _get_theme():
     return st.session_state.get("theme_palette", {
         "bg": "#060B18",
         "card_bg": "rgba(13,31,60,0.85)",
+        "card_border": "rgba(56,189,248,0.15)",
         "text": "#E2E8F0",
         "text_strong": "#F8FAFC",
         "muted": "#64748B",
@@ -380,6 +381,24 @@ def render_dashboard(user_info: dict):
 
     # ── Quick Action Bar ──────────────────────────────────────────
     st.markdown("<div style='height:1.5rem;'></div>", unsafe_allow_html=True)
+    
+    # Butonları ayrı oluşturup sızıntıları önleyelim
+    quick_items = ["👤 Yeni Analiz", "📊 Portföy", "🛡️ Risk Monitör", "📄 Rapor Oluştur"]
+    btns_html = ""
+    for item in quick_items:
+        btns_html += f"""
+        <div style="
+            padding: 0.45rem 0.95rem;
+            background: rgba({t['primary_rgb']}, 0.08);
+            border: 1px solid rgba({t['primary_rgb']}, 0.2);
+            border-radius: 8px;
+            font-size: 0.78rem; font-weight: 700;
+            color: {t['primary']};
+            cursor: pointer;
+            transition: all 0.2s ease;
+        ">{item}</div>
+        """
+
     st.markdown(f"""
     <div style="
         background: {t['card_bg']};
@@ -397,19 +416,8 @@ def render_dashboard(user_info: dict):
                 En çok kullanılan modüllere hızlı erişim
             </div>
         </div>
-        <div style="display:flex; gap:0.6rem; flex-wrap:wrap;">
-            {''.join([f'''
-            <div style="
-                padding: 0.45rem 0.9rem;
-                background: rgba({t["primary_rgb"]}, 0.08);
-                border: 1px solid rgba({t["primary_rgb"]}, 0.2);
-                border-radius: 8px;
-                font-size: 0.78rem; font-weight: 700;
-                color: {t["primary"]};
-                cursor: pointer;
-                transition: all 0.2s ease;
-            ">{item}</div>
-            ''' for item in ["👤 Yeni Analiz", "📊 Portföy", "🛡️ Risk Monitör", "📄 Rapor Oluştur"]])}
+        <div style="display:flex; gap:0.65rem; flex-wrap:wrap;">
+            {btns_html}
         </div>
     </div>
     """, unsafe_allow_html=True)
