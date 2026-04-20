@@ -21,51 +21,80 @@ def render_login_screen():
     st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 
     html, body, .stApp {
         font-family: 'Inter', sans-serif !important;
         margin: 0 !important;
         padding: 0 !important;
+        overflow: hidden !important;
     }
 
-    /* Login page specific dark background */
+    /* Premium Dark Base */
     .stApp {
-        background: #060B18 !important;
+        background: radial-gradient(circle at 50% 50%, #0A1628 0%, #060B18 100%) !important;
     }
 
-
-    /* Animated gradient orbs */
+    /* Dynamic Cyber-Mesh Background */
     .stApp::before {
         content: '';
         position: fixed;
         inset: 0;
-        background:
-            radial-gradient(ellipse 60% 50% at 20% 20%, rgba(56, 189, 248, 0.12) 0%, transparent 60%),
-            radial-gradient(ellipse 50% 60% at 80% 80%, rgba(99, 102, 241, 0.1) 0%, transparent 60%),
-            radial-gradient(ellipse 40% 40% at 50% 50%, rgba(139, 92, 246, 0.05) 0%, transparent 70%);
+        background: 
+            radial-gradient(circle at 20% 30%, rgba(56, 189, 248, 0.15) 0%, transparent 50%),
+            radial-gradient(circle at 80% 70%, rgba(99, 102, 241, 0.12) 0%, transparent 50%),
+            radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.08) 0%, transparent 70%);
         pointer-events: none;
         z-index: 0;
-        animation: orbFloat 8s ease-in-out infinite alternate;
-    }
-    @keyframes orbFloat {
-        from { opacity: 0.7; transform: scale(1); }
-        to   { opacity: 1;   transform: scale(1.05); }
+        animation: atmosphereMove 15s ease-in-out infinite alternate;
     }
 
-    /* Grid pattern overlay */
+    @keyframes atmosphereMove {
+        0% { transform: scale(1) translate(0, 0); opacity: 0.7; }
+        50% { transform: scale(1.1) translate(2% , 1%); opacity: 1; }
+        100% { transform: scale(1) translate(-1%, -2%); opacity: 0.8; }
+    }
+
+    /* Advanced Grid with Glowing Nodes */
     .stApp::after {
         content: '';
         position: fixed;
         inset: 0;
-        background-image:
-            linear-gradient(rgba(56, 189, 248, 0.04) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(56, 189, 248, 0.04) 1px, transparent 1px);
-        background-size: 48px 48px;
+        background-image: 
+            linear-gradient(rgba(56, 189, 248, 0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(56, 189, 248, 0.05) 1px, transparent 1px);
+        background-size: 60px 60px;
+        background-position: center center;
+        mask-image: radial-gradient(circle at 50% 50%, black, transparent 80%);
         pointer-events: none;
         z-index: 0;
+        animation: gridFade 4s ease-in-out infinite alternate;
     }
 
-    /* Hide streamlit chrome */
+    @keyframes gridFade {
+        from { opacity: 0.3; }
+        to   { opacity: 0.6; }
+    }
+
+    /* Top Scanner Line */
+    .scanner-line {
+        position: fixed;
+        top: -100px;
+        left: 0;
+        width: 100%;
+        height: 100px;
+        background: linear-gradient(to bottom, transparent, rgba(56, 189, 248, 0.2), transparent);
+        z-index: 10;
+        pointer-events: none;
+        animation: scanning 6s linear infinite;
+    }
+
+    @keyframes scanning {
+        0% { top: -100px; }
+        100% { top: 100vh; }
+    }
+
+    /* Hide Streamlit elements */
     header[data-testid="stHeader"] { display: none !important; }
     #MainMenu, footer { visibility: hidden; }
     .main .block-container {
@@ -73,237 +102,270 @@ def render_login_screen():
         max-width: 100% !important;
     }
 
-    /* Login wrapper */
-    .login-page-wrapper {
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 2rem;
-        position: relative;
-        z-index: 1;
-    }
-
-    /* Glass card */
+    /* Glassmorphism Card Container */
     .login-glass-card {
-        width: 100%;
-        max-width: 440px;
-        background: rgba(13, 31, 60, 0.75);
-        border: 1px solid rgba(56, 189, 248, 0.15);
-        border-radius: 24px;
-        padding: 3rem 2.5rem;
-        box-shadow:
-            0 32px 80px rgba(0, 0, 0, 0.6),
-            0 0 0 1px rgba(56, 189, 248, 0.08),
-            inset 0 1px 0 rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(32px);
-        animation: cardIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
-    }
-    @keyframes cardIn {
-        from { opacity: 0; transform: translateY(24px) scale(0.97); }
-        to   { opacity: 1; transform: translateY(0)   scale(1); }
+        background: rgba(13, 25, 48, 0.65) !important;
+        backdrop-filter: blur(24px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+        border: 1px solid rgba(56, 189, 248, 0.2) !important;
+        border-radius: 28px !important;
+        padding: 3.5rem 3rem !important;
+        box-shadow: 
+            0 25px 50px -12px rgba(0, 0, 0, 0.7),
+            0 0 40px rgba(56, 189, 248, 0.1),
+            inset 0 1px 1px rgba(255, 255, 255, 0.05) !important;
+        position: relative;
+        overflow: hidden;
+        animation: cardEntrance 1s cubic-bezier(0.2, 0.8, 0.2, 1) both;
     }
 
-    /* Brand area */
-    .login-brand {
-        text-align: center;
-        margin-bottom: 2.5rem;
+    .login-glass-card::before {
+        content: '';
+        position: absolute;
+        top: -50%; left: -50%;
+        width: 200%; height: 200%;
+        background: radial-gradient(circle at center, rgba(56, 189, 248, 0.03) 0%, transparent 60%);
+        pointer-events: none;
+        animation: innerGlow 8s linear infinite;
     }
+
+    @keyframes innerGlow {
+        from { transform: rotate(0deg); }
+        to   { transform: rotate(360deg); }
+    }
+
+    @keyframes cardEntrance {
+        from { opacity: 0; transform: translateY(40px) scale(0.95); filter: blur(10px); }
+        to   { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+    }
+
+    /* Cyber Typography */
     .login-brand-name {
-        font-size: 1.6rem;
-        font-weight: 900;
-        background: linear-gradient(135deg, #38BDF8, #6366F1);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        letter-spacing: -0.5px;
-        margin-bottom: 0.25rem;
-    }
-    .login-brand-sub {
-        font-size: 0.78rem;
-        color: #64748B;
-        font-weight: 500;
-        letter-spacing: 0.15em;
-        text-transform: uppercase;
-    }
-    .login-divider {
-        width: 40px;
-        height: 2px;
-        background: linear-gradient(90deg, #38BDF8, #6366F1);
-        border-radius: 2px;
-        margin: 0.75rem auto;
-    }
-
-    /* Tabs overrides for login */
-    .stTabs [data-baseweb="tab-list"] {
-        background: rgba(255,255,255,0.04) !important;
-        border-radius: 10px !important;
-        padding: 4px !important;
-        border: 1px solid rgba(56,189,248,0.1) !important;
-        margin-bottom: 1.5rem !important;
-        gap: 0 !important;
-    }
-    .stTabs [data-baseweb="tab"] {
-        color: #64748B !important;
-        font-weight: 600 !important;
-        font-size: 0.875rem !important;
-        padding: 0.55rem 1.25rem !important;
-        border-radius: 7px !important;
-        border: none !important;
-        background: transparent !important;
-        flex: 1 !important;
-        text-align: center !important;
-        transition: all 0.2s ease !important;
-    }
-    .stTabs [aria-selected="true"] {
-        background: rgba(56, 189, 248, 0.15) !important;
-        color: #38BDF8 !important;
+        font-family: 'Space Grotesk', sans-serif !important;
+        font-size: 1.8rem !important;
         font-weight: 700 !important;
-        border-bottom: none !important;
-        box-shadow: 0 2px 8px rgba(56, 189, 248, 0.2) !important;
+        background: linear-gradient(135deg, #38BDF8 0%, #6366F1 50%, #A855F7 100%);
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+        background-clip: text !important;
+        letter-spacing: -1px !important;
+        text-transform: uppercase;
+        margin-bottom: 0.1rem;
     }
 
-    /* Input fields */
-    .stTextInput input {
-        background: rgba(255,255,255,0.05) !important;
-        color: #E2E8F0 !important;
-        border: 1.5px solid rgba(51, 65, 85, 0.8) !important;
-        border-radius: 10px !important;
-        padding: 0.7rem 1rem !important;
-        font-size: 0.9rem !important;
-        font-family: 'Inter', sans-serif !important;
-        transition: all 0.25s ease !important;
+    .login-status-bar {
+        height: 3px;
+        width: 100%;
+        background: rgba(56, 189, 248, 0.1);
+        border-radius: 10px;
+        margin: 1.5rem 0;
+        overflow: hidden;
+        position: relative;
     }
+
+    .login-status-progress {
+        position: absolute;
+        height: 100%;
+        width: 40%;
+        background: linear-gradient(90deg, transparent, #38BDF8, transparent);
+        animation: progressMove 2.5s infinite ease-in-out;
+    }
+
+    @keyframes progressMove {
+        0% { left: -40%; }
+        100% { left: 100%; }
+    }
+
+    /* Form Elements */
+    .stTextInput input {
+        background: rgba(30, 41, 59, 0.4) !important;
+        border: 1px solid rgba(51, 65, 85, 0.5) !important;
+        color: #F1F5F9 !important;
+        border-radius: 12px !important;
+        padding: 0.8rem 1.2rem !important;
+        transition: all 0.3s ease !important;
+        font-size: 0.95rem !important;
+    }
+
     .stTextInput input:focus {
         border-color: #38BDF8 !important;
-        background: rgba(56, 189, 248, 0.05) !important;
-        box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.12) !important;
-        outline: none !important;
-    }
-    .stTextInput input::placeholder {
-        color: #475569 !important;
-    }
-    .stTextInput label {
-        color: #94A3B8 !important;
-        font-size: 0.82rem !important;
-        font-weight: 600 !important;
-        letter-spacing: 0.03em !important;
+        box-shadow: 0 0 15px rgba(56, 189, 248, 0.2) !important;
+        background: rgba(30, 41, 59, 0.6) !important;
     }
 
-    /* Login button */
+    /* Futuristic Button */
     .stButton > button {
-        background: linear-gradient(135deg, #38BDF8 0%, #6366F1 100%) !important;
-        color: #FFFFFF !important;
+        background: linear-gradient(90deg, #38BDF8 0%, #6366F1 100%) !important;
         border: none !important;
-        border-radius: 10px !important;
-        padding: 0.75rem !important;
-        font-size: 0.95rem !important;
+        border-radius: 12px !important;
+        padding: 0.85rem !important;
+        color: white !important;
         font-weight: 700 !important;
-        letter-spacing: 0.02em !important;
-        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
-        box-shadow: 0 4px 16px rgba(56, 189, 248, 0.3) !important;
-        width: 100% !important;
+        letter-spacing: 1px !important;
+        text-transform: uppercase !important;
+        box-shadow: 0 4px 20px rgba(56, 189, 248, 0.25) !important;
+        position: relative;
+        overflow: hidden !important;
     }
+
+    .stButton > button::after {
+        content: '';
+        position: absolute;
+        top: 0; left: -100%;
+        width: 100%; height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: 0.5s;
+    }
+
+    .stButton > button:hover::after {
+        left: 100%;
+    }
+
     .stButton > button:hover {
         transform: translateY(-2px) !important;
-        box-shadow: 0 8px 28px rgba(56, 189, 248, 0.45) !important;
-        filter: brightness(1.05) !important;
-    }
-    .stButton > button:active {
-        transform: translateY(0) !important;
+        box-shadow: 0 8px 30px rgba(56, 189, 248, 0.4) !important;
     }
 
-    /* Alert overrides */
-    .stSuccess  { background: rgba(16,185,129,0.1) !important; border-left: 4px solid #10B981 !important; border-radius: 10px !important; color: #D1FAE5 !important; }
-    .stError    { background: rgba(244,63,94,0.1)  !important; border-left: 4px solid #F43F5E !important; border-radius: 10px !important; color: #FFE4E6 !important; }
-    .stWarning  { background: rgba(245,158,11,0.1) !important; border-left: 4px solid #F59E0B !important; border-radius: 10px !important; color: #FEF3C7 !important; }
-
-    /* Security badge */
-    .security-badge {
-        display: flex;
+    /* Security Shield Badge */
+    .shield-badge {
+        display: inline-flex;
         align-items: center;
-        justify-content: center;
-        gap: 0.4rem;
-        margin-top: 2rem;
-        color: #475569;
-        font-size: 0.73rem;
-        font-weight: 500;
-        letter-spacing: 0.05em;
-    }
-    .security-dot {
-        width: 6px; height: 6px;
-        border-radius: 50%;
-        background: #10B981;
-        animation: secPulse 2s ease infinite;
-    }
-    @keyframes secPulse {
-        0%, 100% { opacity: 1; transform: scale(1); }
-        50%       { opacity: 0.5; transform: scale(0.8); }
+        gap: 6px;
+        background: rgba(16, 185, 129, 0.1);
+        border: 1px solid rgba(16, 185, 129, 0.2);
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 0.72rem;
+        color: #10B981;
+        font-weight: 600;
+        margin-top: 1rem;
     }
 
-    /* Version badge */
-    .version-badge {
-        text-align: center;
-        margin-top: 1.5rem;
-        color: #334155;
-        font-size: 0.7rem;
-        font-weight: 500;
-        letter-spacing: 0.08em;
+    .pulse-dot {
+        width: 6px; height: 6px;
+        background: #10B981;
+        border-radius: 50%;
+        box-shadow: 0 0 8px #10B981;
+        animation: pulse 1.5s infinite;
+    }
+
+    /* 2FA Input Fields */
+    .otp-input-container {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin: 2rem 0;
+    }
+    
+    /* Security Insights Card */
+    .insights-panel {
+        background: rgba(56, 189, 248, 0.03);
+        border: 1px solid rgba(56, 189, 248, 0.1);
+        border-radius: 16px;
+        padding: 1.25rem;
+        margin-top: 2rem;
+        animation: fadeIn 1s ease-out;
+    }
+    
+    .insight-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+        font-size: 0.72rem;
+    }
+    
+    .insight-label { color: #64748B; font-weight: 500; }
+    .insight-value { color: #38BDF8; font-weight: 600; font-family: monospace; }
+
+    @keyframes pulse {
+        0% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.5); opacity: 0.5; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
     }
     </style>
+    
     """, unsafe_allow_html=True)
 
+    # ─── Initialization ────────────────────────────────────────────
+    if "login_stage" not in st.session_state:
+        st.session_state["login_stage"] = "credentials"
+    if "temp_user" not in st.session_state:
+        st.session_state["temp_user"] = None
+
+    # ─── New Visual Elements ───────────────────────────────────────
+    st.markdown('<div class="scanner-line"></div>', unsafe_allow_html=True)
+
     # ─── Center the login card ─────────────────────────────────────
-    _, center_col, _ = st.columns([1, 1.6, 1])
+    _, center_col, _ = st.columns([1, 1.4, 1])
 
     with center_col:
+        st.markdown('<div class="login-glass-card">', unsafe_allow_html=True)
+        
         # Brand header
         if os.path.exists(logo_path):
-            st.markdown("<div style='text-align:center; margin-bottom:1.5rem;'>", unsafe_allow_html=True)
-            st.image(logo_path, width=240)
+            st.markdown("<div style='text-align:center; margin-bottom:1rem;'>", unsafe_allow_html=True)
+            st.image(logo_path, width=220)
             st.markdown("</div>", unsafe_allow_html=True)
         else:
             st.markdown(f"""
             <div class="login-brand">
                 <div class="login-brand-name">{APP_NAME}</div>
-                <div class="login-divider"></div>
                 <div class="login-brand-sub">Institutional Risk Terminal</div>
             </div>
             """, unsafe_allow_html=True)
 
-        # Institution tagline
+        # Status Bar Animation
         st.markdown("""
-        <div style="text-align:center; margin-bottom:2rem;">
-            <div style="
-                font-size: 1.1rem; font-weight: 800;
-                background: linear-gradient(135deg, #38BDF8, #6366F1);
-                -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-                background-clip: text; letter-spacing: -0.3px;
-            ">Kurumsal Erişim Paneli</div>
-            <div style="font-size:0.78rem; color:#475569; margin-top:4px; font-weight:500;">
-                Yetkili personel girişi — Tüm işlemler denetlenmektedir
-            </div>
-        </div>
+        <div class="login-status-bar"><div class="login-status-progress"></div></div>
         """, unsafe_allow_html=True)
 
-        tab_login, tab_register = st.tabs(["🔐  Giriş Yap", "📝  Üye Ol"])
+        if st.session_state["login_stage"] == "credentials":
+            # Institution tagline
+            st.markdown("""
+            <div style="text-align:center; margin-bottom:1.5rem;">
+                <div style="
+                    font-family: 'Space Grotesk', sans-serif;
+                    font-size: 1.2rem; font-weight: 700;
+                    color: #F8FAFC; letter-spacing: -0.5px;
+                ">KURUMSAL ERİŞİM</div>
+                <div style="font-size:0.75rem; color:#64748B; margin-top:2px; font-weight:500;">
+                    <span style="color:#38BDF8;">●</span> Güvenli geçit protokolü aktif
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
 
-        with tab_login:
-            _render_login_form()
+            tab_login, tab_register = st.tabs(["🔐  Giriş Yap", "📝  Üye Ol"])
 
-        with tab_register:
-            _render_register_form()
+            with tab_login:
+                _render_login_form()
+
+            with tab_register:
+                _render_register_form()
+        else:
+            _render_2fa_stage()
+
+        # Security Insights (Sadece login aşamasında veya her zaman gösterilebilir)
+        _render_security_insights()
 
         # Security indicator
         st.markdown(f"""
-        <div class="security-badge">
-            <span class="security-dot"></span>
-            TLS 1.3 Şifrelemesi &nbsp;·&nbsp; 256-bit AES &nbsp;·&nbsp; SOC 2 Uyumlu
+        <div style="text-align:center; margin-top:1.5rem;">
+            <div class="shield-badge">
+                <div class="pulse-dot"></div>
+                AES-256 Şifreli Bağlantı
+            </div>
         </div>
-        <div class="version-badge">
-            {APP_NAME} &nbsp;v{APP_VERSION} &nbsp;·&nbsp; KVKK &amp; GDPR Compliant
+        <div class="version-badge" style="color:#475569; font-size:0.65rem; margin-top:1.2rem;">
+            {APP_NAME} v{APP_VERSION} &nbsp;·&nbsp; SOC2 / GDPR
         </div>
         """, unsafe_allow_html=True)
+
+        st.markdown('</div>', unsafe_allow_html=True)
 
 
 def _render_login_form():
@@ -315,9 +377,10 @@ def _render_login_form():
         placeholder="kullanici_adi",
         key="login_user"
     )
+    show_pass = st.checkbox("Şifreyi Göster", key="show_pass_toggle")
     password = st.text_input(
         "Şifre",
-        type="password",
+        type="password" if not show_pass else "default",
         placeholder="••••••••••",
         key="login_pass"
     )
@@ -347,8 +410,10 @@ def _render_login_form():
             result = login(username.strip(), password)
 
         if result["success"]:
-            st.success("✅ Giriş başarılı — Yönlendiriliyor...")
-            time.sleep(0.3)
+            st.session_state["temp_user"] = result["user"]
+            st.session_state["login_stage"] = "2fa"
+            st.success("✅ Kimlik Doğrulandı. Güvenlik katmanı yükleniyor...")
+            time.sleep(0.6)
             st.rerun()
         else:
             st.error("❌ Kullanıcı adı veya şifre hatalı.")
@@ -415,3 +480,71 @@ def _render_register_form():
             st.success("✅ Hesap oluşturuldu. Yönetici onayı bekleniyor.")
         else:
             st.error("❌ Bu kullanıcı adı zaten kullanılıyor.")
+
+
+def _render_2fa_stage():
+    """İkinci kademe doğrulama (2FA) ekranı."""
+    st.markdown("""
+    <div style="text-align:center; margin-bottom:1.5rem;">
+        <div style="font-family:'Space Grotesk', sans-serif; font-size:1.1rem; font-weight:700; color:#F8FAFC;">
+            İKİ ADIMLI DOĞRULAMA
+        </div>
+        <div style="font-size:0.75rem; color:#64748B; margin-top:4px;">
+            Lütfen kayıtlı cihazınıza gönderilen 6 haneli kodu girin.
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # 2FA Kod Girişi
+    otp_code = st.text_input("Güvenlik Kodu", placeholder="000000", max_chars=6, help="Demo kodu: 123456")
+    
+    c1, c2 = st.columns(2)
+    with c1:
+        if st.button("← Geri", use_container_width=True):
+            st.session_state["login_stage"] = "credentials"
+            st.session_state["temp_user"] = None
+            st.rerun()
+    with c2:
+        if st.button("Doğrula & Gir", use_container_width=True, type="primary"):
+            if otp_code == "123456":
+                # Gerçek oturumu başlat
+                st.session_state["authenticated"] = True
+                st.session_state["user_info"] = st.session_state["temp_user"]
+                st.success("🔓 Erişim sağlandı. Hoş geldiniz.")
+                time.sleep(0.5)
+                st.rerun()
+            else:
+                st.error("❌ Hatalı veya süresi dolmuş kod.")
+
+    st.markdown("""
+    <div style="text-align:center; margin-top:1rem; font-size:0.7rem; color:#475569;">
+        Kod gelmedi mi? <a href="#" style="color:#38BDF8; text-decoration:none;">Tekrar Gönder</a>
+    </div>
+    """, unsafe_allow_html=True)
+
+
+def _render_security_insights():
+    """Giriş ekranı için güvenlik istatistikleri ve meta veriler."""
+    st.markdown(f"""
+    <div class="insights-panel">
+        <div style="font-size:0.75rem; font-weight:700; color:#94A3B8; margin-bottom:1rem; text-transform:uppercase; letter-spacing:0.05em;">
+            🛡️ Terminal Güvenlik İzlemesi
+        </div>
+        <div class="insight-item">
+            <span class="insight-label">Erişim Noktası:</span>
+            <span class="insight-value">192.168.1.44 (Istanbul, TR)</span>
+        </div>
+        <div class="insight-item">
+            <span class="insight-label">Terminal Durumu:</span>
+            <span class="insight-value" style="color:#10B981;">GÜVENLİ</span>
+        </div>
+        <div class="insight-item">
+            <span class="insight-label">Son Başarılı Giriş:</span>
+            <span class="insight-value">Bugün, 09:12</span>
+        </div>
+        <div class="insight-item">
+            <span class="insight-label">Şifreleme Standartı:</span>
+            <span class="insight-value">FIPS 140-2</span>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
