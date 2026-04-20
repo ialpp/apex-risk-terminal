@@ -247,6 +247,11 @@ def render_sidebar(user_info: dict) -> str:
 
         # Mevcut sayfayı bul veya varsayılanı kullan
         current_page_label = st.session_state.get("current_page_label", page_names[0])
+        
+        # Eğer doğrudan bir butondan gelinmişse (Sistem Ayarları gibi) listeye ekle
+        if current_page_label not in page_names:
+            page_names.append(current_page_label)
+            
         try:
             current_index = page_names.index(current_page_label)
         except ValueError:
