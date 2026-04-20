@@ -546,12 +546,17 @@ def _render_2fa_stage():
 
             if otp_code == correct_otp:
                 # Gerçek oturumu başlat
+                user_info = st.session_state["temp_user"]
                 st.session_state["authenticated"] = True
-                st.session_state["user_info"] = st.session_state["temp_user"]
+                st.session_state["user_info"]     = user_info
+                st.session_state["lang"]          = user_info.get("lang", "tr")
+                st.session_state["theme"]         = user_info.get("theme", "dark")
+                
                 st.success("🔓 Erişim sağlandı. Hoş geldiniz.")
                 
                 # OTP verilerini temizle
                 if "correct_otp" in st.session_state: del st.session_state["correct_otp"]
+                if "temp_user" in st.session_state: del st.session_state["temp_user"]
                 
                 time.sleep(0.5)
                 st.rerun()

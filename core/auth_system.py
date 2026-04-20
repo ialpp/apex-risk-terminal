@@ -56,11 +56,9 @@ def login(username: str, password: str) -> dict:
     if isinstance(result, dict) and result.get("error") == "locked":
         return {"success": False, "reason": "locked", "until": result.get("until")}
 
-    # Başarılı giriş
-    st.session_state["authenticated"]  = True
-    st.session_state["user_info"]      = result
-    st.session_state["lang"]           = result.get("lang", "tr")
-    st.session_state["theme"]          = result.get("theme", "dark")
+    # Başarılı ilk aşama (2FA öncesi)
+    # NOT: st.session_state["authenticated"] burada set EDİLMEMELİDİR.
+    # Bu değişken sadece OTP doğrulandıktan sonra True yapılacaktır.
     st.session_state["last_activity"]  = datetime.now()
     st.session_state["login_attempts"] = 0
 
