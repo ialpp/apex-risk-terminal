@@ -443,8 +443,8 @@ def _render_login_form():
             with st.spinner("Güvenlik kodu gönderiliyor..."):
                 if send_2fa_otp(user_info):
                     st.session_state["login_stage"] = "2fa"
-                    st.success(f"✅ Kimlik Doğrulandı. {user_info['email']} adresine kod gönderildi.")
-                    time.sleep(1)
+                    st.success("✅ Kimlik Doğrulandı. Yönlendiriliyor...")
+                    time.sleep(0.8)
                     st.rerun()
                 else:
                     st.error("❌ Güvenlik kodu gönderilemedi. Lütfen sistem yöneticisiyle iletişime geçin.")
