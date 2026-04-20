@@ -23,19 +23,19 @@ def render_login_screen():
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
-
+    
     html, body, .stApp {
         font-family: 'Inter', sans-serif !important;
         margin: 0 !important;
         padding: 0 !important;
         overflow: hidden !important;
     }
-
+    
     /* Premium Dark Base */
     .stApp {
         background: radial-gradient(circle at 50% 50%, #0A1628 0%, #060B18 100%) !important;
     }
-
+    
     /* Dynamic Cyber-Mesh Background */
     .stApp::before {
         content: '';
@@ -49,13 +49,13 @@ def render_login_screen():
         z-index: 0;
         animation: atmosphereMove 15s ease-in-out infinite alternate;
     }
-
+    
     @keyframes atmosphereMove {
         0% { transform: scale(1) translate(0, 0); opacity: 0.7; }
         50% { transform: scale(1.1) translate(2% , 1%); opacity: 1; }
         100% { transform: scale(1) translate(-1%, -2%); opacity: 0.8; }
     }
-
+    
     /* Advanced Grid with Glowing Nodes */
     .stApp::after {
         content: '';
@@ -71,12 +71,12 @@ def render_login_screen():
         z-index: 0;
         animation: gridFade 4s ease-in-out infinite alternate;
     }
-
+    
     @keyframes gridFade {
         from { opacity: 0.3; }
         to   { opacity: 0.6; }
     }
-
+    
     /* Top Scanner Line */
     .scanner-line {
         position: fixed;
@@ -89,12 +89,12 @@ def render_login_screen():
         pointer-events: none;
         animation: scanning 6s linear infinite;
     }
-
+    
     @keyframes scanning {
         0% { top: -100px; }
         100% { top: 100vh; }
     }
-
+    
     /* Hide Streamlit elements */
     header[data-testid="stHeader"] { display: none !important; }
     #MainMenu, footer { visibility: hidden; }
@@ -102,7 +102,7 @@ def render_login_screen():
         padding: 0 !important;
         max-width: 100% !important;
     }
-
+    
     /* Glassmorphism Card Container */
     .login-glass-card {
         background: rgba(13, 25, 48, 0.65) !important;
@@ -119,7 +119,7 @@ def render_login_screen():
         overflow: hidden;
         animation: cardEntrance 1s cubic-bezier(0.2, 0.8, 0.2, 1) both;
     }
-
+    
     .login-glass-card::before {
         content: '';
         position: absolute;
@@ -129,17 +129,17 @@ def render_login_screen():
         pointer-events: none;
         animation: innerGlow 8s linear infinite;
     }
-
+    
     @keyframes innerGlow {
         from { transform: rotate(0deg); }
         to   { transform: rotate(360deg); }
     }
-
+    
     @keyframes cardEntrance {
         from { opacity: 0; transform: translateY(40px) scale(0.95); filter: blur(10px); }
         to   { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
     }
-
+    
     /* Cyber Typography */
     .login-brand-name {
         font-family: 'Space Grotesk', sans-serif !important;
@@ -153,7 +153,7 @@ def render_login_screen():
         text-transform: uppercase;
         margin-bottom: 0.1rem;
     }
-
+    
     .login-status-bar {
         height: 3px;
         width: 100%;
@@ -163,7 +163,7 @@ def render_login_screen():
         overflow: hidden;
         position: relative;
     }
-
+    
     .login-status-progress {
         position: absolute;
         height: 100%;
@@ -171,12 +171,12 @@ def render_login_screen():
         background: linear-gradient(90deg, transparent, #38BDF8, transparent);
         animation: progressMove 2.5s infinite ease-in-out;
     }
-
+    
     @keyframes progressMove {
         0% { left: -40%; }
         100% { left: 100%; }
     }
-
+    
     /* Form Elements */
     .stTextInput input {
         background: rgba(30, 41, 59, 0.4) !important;
@@ -187,13 +187,13 @@ def render_login_screen():
         transition: all 0.3s ease !important;
         font-size: 0.95rem !important;
     }
-
+    
     .stTextInput input:focus {
         border-color: #38BDF8 !important;
         box-shadow: 0 0 15px rgba(56, 189, 248, 0.2) !important;
         background: rgba(30, 41, 59, 0.6) !important;
     }
-
+    
     /* Futuristic Button */
     .stButton > button {
         background: linear-gradient(90deg, #38BDF8 0%, #6366F1 100%) !important;
@@ -208,7 +208,7 @@ def render_login_screen():
         position: relative;
         overflow: hidden !important;
     }
-
+    
     .stButton > button::after {
         content: '';
         position: absolute;
@@ -217,16 +217,16 @@ def render_login_screen():
         background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
         transition: 0.5s;
     }
-
+    
     .stButton > button:hover::after {
         left: 100%;
     }
-
+    
     .stButton > button:hover {
         transform: translateY(-2px) !important;
         box-shadow: 0 8px 30px rgba(56, 189, 248, 0.4) !important;
     }
-
+    
     /* Security Shield Badge */
     .shield-badge {
         display: inline-flex;
@@ -241,7 +241,7 @@ def render_login_screen():
         font-weight: 600;
         margin-top: 1rem;
     }
-
+    
     .pulse-dot {
         width: 6px; height: 6px;
         background: #10B981;
@@ -249,7 +249,7 @@ def render_login_screen():
         box-shadow: 0 0 8px #10B981;
         animation: pulse 1.5s infinite;
     }
-
+    
     /* 2FA Input Fields */
     .otp-input-container {
         display: flex;
@@ -277,7 +277,7 @@ def render_login_screen():
     
     .insight-label { color: #64748B; font-weight: 500; }
     .insight-value { color: #38BDF8; font-weight: 600; font-family: monospace; }
-
+    
     @keyframes pulse {
         0% { transform: scale(1); opacity: 1; }
         50% { transform: scale(1.5); opacity: 0.5; }
@@ -289,7 +289,7 @@ def render_login_screen():
         to { opacity: 1; transform: translateY(0); }
     }
     </style>
-    """, unsafe_allow_html=True)
+    """), unsafe_allow_html=True)
 
     # ─── Initialization ────────────────────────────────────────────
     if "login_stage" not in st.session_state:
