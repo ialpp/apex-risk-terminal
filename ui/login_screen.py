@@ -451,21 +451,6 @@ def _render_login_form():
         else:
             st.error("❌ Kullanıcı adı veya şifre hatalı.")
 
-    st.markdown(textwrap.dedent("""
-    <div style="margin-top:1.5rem; padding:0.9rem 1rem;
-                background: rgba(56,189,248,0.05);
-                border: 1px solid rgba(56,189,248,0.12);
-                border-radius: 10px;">
-        <div style="font-size:0.73rem; color:#475569; font-weight:600; margin-bottom:0.4rem;">
-            🔑 Demo Hesapları
-        </div>
-        <div style="font-size:0.72rem; color:#64748B; line-height:1.7;">
-            <code style="color:#38BDF8;">admin</code> / <code style="color:#38BDF8;">admin123</code>
-            &nbsp;&nbsp;&nbsp;
-            <code style="color:#94A3B8;">analist</code> / <code style="color:#94A3B8;">analist123</code>
-        </div>
-    </div>
-    """), unsafe_allow_html=True)
 
 
 def _render_register_form():
@@ -529,7 +514,7 @@ def _render_2fa_stage():
     """, unsafe_allow_html=True)
 
     # 2FA Kod Girişi
-    otp_code = st.text_input("Güvenlik Kodu", placeholder="000000", max_chars=6, help="Demo kodu: 123456")
+    otp_code = st.text_input("Güvenlik Kodu", placeholder="000000", max_chars=6)
     
     c1, c2 = st.columns(2)
     with c1:
