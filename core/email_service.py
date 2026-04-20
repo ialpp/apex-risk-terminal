@@ -35,10 +35,14 @@ def send_email(to_email: str, subject: str, body_html: str):
             server = smtplib.SMTP_SSL(smtp_server, smtp_port, context=context, timeout=10)
         else:
             server = smtplib.SMTP(smtp_server, smtp_port, timeout=10)
+            server.ehlo()  # Sunucuya merhaba de
             server.starttls(context=context)
+            server.ehlo()  # TLS sonrası tekrar merhaba de
 
         with server:
-            server.login(smtp_user, smtp_pass)
+            # Şifredeki olası boşlukları temizle (Google 16 haneli kodu boşluklu verir)
+            clean_pass = smtp_pass.replace(" ", "")
+            server.login(smtp_user, clean_pass)
             server.send_message(msg)
         
         return True
