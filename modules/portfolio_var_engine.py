@@ -7,8 +7,7 @@ Monte Carlo (Gaussian Copula Approx) ile binlerce kredinin eş zamanlı temerrü
 import numpy as np
 import pandas as pd
 from scipy.stats import norm
-import logging
-
+import yfinance as yf
 logger = logging.getLogger(__name__)
 
 class PortfolioVaREngine:
@@ -20,15 +19,24 @@ class PortfolioVaREngine:
     def __init__(self):
         self.num_iterations = 10000 
         
-    def simulate_portfolio_loss(self, portfolio_df: pd.DataFrame, asset_correlation: float = 0.15) -> dict:
+    def _get_systemic_risk_weight(self) -> float:
+        """Piyasa korku endeksine (VIX) göre sistematik risk ağırlığını belirler."""
+        try:
+            vix = yf.Ticker("^VIX").history(period="1d")['Close'].iloc[-1]
+            # VIX 15 altı: Düşük korelasyon (0.10)
+            # VIX 30 üstü: Yüksek korelasyon (0.25+)
+            return np.clip(vix / 100, 0.10, 0.35)
+        except Exception:
+            return 0.15 # Fallback
+        
+    def simulate_portfolio_loss(self, portfolio_df: pd.DataFrame, asset_correlation: float = None) -> dict:
         """
         Copula tabanlı Monte Carlo Kredi Kayıp Dağılımı (Loss Distribution)
         
-        portfolio_df sütunları:
-        - loan_amount
-        - pd_prob (Probability of Default, ondalık)
-        - lgd_prob (Loss Given Default, ondalık)
+        asset_correlation: None ise VIX üzerinden dinamik hesaplanır.
         """
+        if asset_correlation is None:
+            asset_correlation = self._get_systemic_risk_weight()
         if portfolio_df.empty:
              return {"error": "Portföy boş."}
              

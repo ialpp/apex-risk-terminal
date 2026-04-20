@@ -29,6 +29,7 @@ import collections
 import threading
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Tuple, Union
+import yfinance as yf
 
 # ─────────────────────────────────────────────────────────────────────────────
 #  BÖLÜM 1: ENUM & TİPLER
@@ -99,8 +100,8 @@ class RealtimeRiskMonitor:
             ThresholdRule("R001", AlertCategory.CREDIT_RISK, "credit_score", 450, "<", AlertSeverity.HIGH, "Kredi skoru tehlikeli seviyede."),
             ThresholdRule("R002", AlertCategory.FRAUD, "fraud_prob", 0.85, ">", AlertSeverity.CRITICAL, "Yüksek olasılıklı sahtekarlık şüphesi."),
             ThresholdRule("R003", AlertCategory.LIQUIDITY, "lcr_ratio", 1.10, "<", AlertSeverity.MEDIUM, "Likidite karşılama oranı sınırda."),
-            ThresholdRule("R004", AlertCategory.MACRO, "cds_spread", 600, ">", AlertSeverity.HIGH, "Ülke risk primi (CDS) ani yükselişi."),
-            ThresholdRule("R005", AlertCategory.ESG, "esg_score", 30, "<", AlertSeverity.MEDIUM, "ESG puanı sürdürülebilirlik sınırının altında."),
+            ThresholdRule("R004", AlertCategory.MACRO, "vix_index", 25, ">", AlertSeverity.HIGH, "Küresel korku endeksi (VIX) yükseliyor! Piyasa oynaklığı riskli."),
+            ThresholdRule("R005", AlertCategory.MACRO, "fx_rate", 33, ">", AlertSeverity.MEDIUM, "Döviz kurunda (USD/TRY) hareketlilik izleniyor."),
             ThresholdRule("R006", AlertCategory.CREDIT_RISK, "delinquency_days", 30, ">", AlertSeverity.LOW, "Gecikme süresi 30 günü geçti.")
         ]
 
@@ -207,37 +208,33 @@ class RiskStreamSimulator:
         self.is_running = False
 
     def _simulate_loop(self):
-        """Sürekli veri akışı simüle et."""
+        """Gerçek piyasa verilerini izleyerek alarm üret."""
+        tickers = {
+            "VIX": "^VIX",
+            "USD/TRY": "TRY=X",
+            "GOLD": "GC=F",
+            "BTC": "BTC-USD"
+        }
+        
         while self.is_running:
-            # Rastgele bir kategori ve metrik seç
-            cat = random.choice(list(AlertCategory))
+            for label, symbol in tickers.items():
+                try:
+                    data = yf.Ticker(symbol).history(period="1d")
+                    if not data.empty:
+                        last_price = data['Close'].iloc[-1]
+                        
+                        # Kategorik eşleştirme
+                        if label == "VIX":
+                            self.monitor.check_metric("GLOBAL", AlertCategory.MACRO, "vix_index", last_price)
+                        elif label == "USD/TRY":
+                            self.monitor.check_metric("TRY_FX", AlertCategory.MACRO, "fx_rate", last_price)
+                        elif label == "GOLD":
+                            self.monitor.check_metric("COMMODITY", AlertCategory.LIQUIDITY, "gold_price", last_price)
+                except Exception:
+                    continue
             
-            if cat == AlertCategory.CREDIT_RISK:
-                entity = f"CUST-{random.randint(1000, 9999)}"
-                # Credit Score (Normal: 600, Bazen düşer)
-                val = random.gauss(650, 100)
-                self.monitor.check_metric(entity, cat, "credit_score", val)
-                
-                # Delinquency
-                if random.random() < 0.1:
-                    days = random.randint(0, 45)
-                    self.monitor.check_metric(entity, cat, "delinquency_days", days)
-            
-            elif cat == AlertCategory.FRAUD:
-                entity = f"TRX-{uuid.uuid4().hex[:6].upper()}"
-                prob = random.random()
-                if prob > 0.8:
-                    self.monitor.check_metric(entity, cat, "fraud_prob", prob)
-            
-            elif cat == AlertCategory.MACRO:
-                cds = random.uniform(300, 750)
-                self.monitor.check_metric("TÜRKİYE", cat, "cds_spread", cds)
-                
-            elif cat == AlertCategory.LIQUIDITY:
-                lcr = random.uniform(0.9, 1.4)
-                self.monitor.check_metric("BANKA-01", cat, "lcr_ratio", lcr)
-
-            time.sleep(random.uniform(0.5, 3.0))
+            # 1 dakikada bir kontrol et (API limitlerini korumak için)
+            time.sleep(60)
 
 # ─────────────────────────────────────────────────────────────────────────────
 #  API EXPORT

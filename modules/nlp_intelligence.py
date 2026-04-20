@@ -43,6 +43,7 @@ from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 import numpy as np
+import yfinance as yf
 from data.sample_warehouse import SampleDataWarehouse
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -187,29 +188,36 @@ class NLPIntelligenceEngine:
 #  BÖLÜM 5: HABER SİMÜLASYON VERİ SETLERİ (MİLYONLARCA TOKENS)
 # ─────────────────────────────────────────────────────────────────────────────
 
-class NewsSimulator:
-    """Testler için gerçekçi haber akışı üretir."""
+class LiveNewsProvider:
+    """Gerçek zamanlı finansal haber akışı sağlar."""
     
-    HEADLINE_TEMPLATES = [
-        "{entity} reports record profits in Q3, beating expectations.",
-        "Market crash fears as {entity} faces regulatory probe.",
-        "New innovation from {entity} could disrupt the {sector} industry.",
-        "{entity} stocks plunge following CEO resignation.",
-        "Merger talks between {entity} and local competitors heating up."
-    ]
+    def __init__(self):
+        self.tickers = ["^GSPC", "TRY=X", "GC=F", "BTC-USD", "AAPL", "NVDA", "THYAO.IS"]
+
+    def fetch_live_news(self) -> List[FinancialNews]:
+        """Seçili ana varlıklardan gerçek haberleri çeker."""
+        all_news = []
+        for symbol in self.tickers:
+            try:
+                ticker = yf.Ticker(symbol)
+                yf_news = ticker.news
+                for item in yf_news[:3]: # Her sembolden en güncel 3 haber
+                    all_news.append(FinancialNews(
+                        headline=item.get("title", "No Title"),
+                        content=item.get("publisher", "Unknown Source"),
+                        source=item.get("link", "https://finance.yahoo.com"),
+                        timestamp=datetime.datetime.fromtimestamp(item.get("providerPublishTime", time.time()))
+                    ))
+            except Exception:
+                continue
+        return all_news
 
     def generate_random_news(self) -> FinancialNews:
-        from data.sample_warehouse import GLOBAL_CORPORATE_MASTER
-        comp = random.choice(GLOBAL_CORPORATE_MASTER)
-        template = random.choice(self.HEADLINE_TEMPLATES)
-        
-        headline = template.format(entity=comp["name"], sector=comp["sector"])
-        return FinancialNews(
-            headline=headline,
-            content="Detailed financial report analysis continues...",
-            source="ProQuant NewsWire",
-            entities=[comp["symbol"]]
-        )
+        """Geriye dönük uyumluluk için; rastgele bir canlı haber döner."""
+        news_list = self.fetch_live_news()
+        if news_list:
+            return random.choice(news_list)
+        return FinancialNews("Piyasa verisi bekleniyor...", "Bağlantı kontrol ediliyor.", "System")
 
 # ─────────────────────────────────────────────────────────────────────────────
 #  API EXPORTS

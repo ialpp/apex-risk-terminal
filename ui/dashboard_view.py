@@ -134,29 +134,35 @@ def render_dashboard(user_info: dict):
     role      = user_info.get("role", "—")
     dept      = user_info.get("department", "—")
 
+    # Canlı Haber Akışını Hazırla
+    from modules.nlp_intelligence import get_nlp_engine, LiveNewsProvider
+    news_provider = LiveNewsProvider()
+    real_news = news_provider.fetch_live_news()[:4] # Son 4 haber
+
     import datetime
     hour = datetime.datetime.now().hour
     greeting = "Günaydın" if hour < 12 else "İyi Öğlenler" if hour < 17 else "İyi Akşamlar"
 
     st.markdown(textwrap.dedent(f"""
-    <div style="margin-bottom: 2rem;">
+    <div style="margin-bottom: 2.2rem;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+            <span style="background: #10B981; color: white; font-size: 0.65rem; padding: 2px 8px; border-radius: 20px; font-weight: 800; letter-spacing: 0.5px;">CANLI VERİ (yfinance)</span>
+            <span style="color: {t['muted']}; font-size: 0.75rem;">Sistem ID: {st.session_state.get('session_id', 'APEX-PRO-01')}</span>
+        </div>
         <div style="
             display: flex; align-items: flex-start;
             justify-content: space-between;
             flex-wrap: wrap; gap: 1rem;
         ">
             <div>
-                <div style="font-size:0.78rem; font-weight:600; color:{t['muted']};
-                            text-transform:uppercase; letter-spacing:0.1em; margin-bottom:0.35rem;">
-                    📊 Yönetici Kontrol Paneli
-                </div>
                 <h1 style="
                     margin: 0; font-size: 1.8rem; font-weight: 900;
                     background: linear-gradient(135deg, {t['gradient1']}, {t['gradient2']});
                     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
                     background-clip: text; letter-spacing: -0.5px; line-height: 1.1;
+                    padding-bottom: 0.2rem;
                 ">{greeting}, {full_name.split()[0]}.</h1>
-                <p style="margin: 0.4rem 0 0; color: {t['muted']}; font-size: 0.875rem; font-weight: 500;">
+                <p style="margin: 0.2rem 0 0; color: {t['muted']}; font-size: 0.875rem; font-weight: 500;">
                     {role} &nbsp;·&nbsp; {dept}
                 </p>
             </div>
@@ -426,6 +432,51 @@ def render_dashboard(user_info: dict):
                     "Karar":   st.column_config.TextColumn("⚡ Karar", width="small"),
                 }
             )
+
+    st.markdown("<div style='height:1.5rem;'></div>", unsafe_allow_html=True)
+
+    # ── Financial Intelligence Row (Live News) ────────────────────
+    st.markdown(section_header_html("🗞️", "Finansal İstihbarat Akışı",
+                                         "Küresel piyasalardan anlık haberler"), unsafe_allow_html=True)
+    
+    if not real_news:
+        st.info("Canlı haber akışı şu an ulaşılamaz durumda. Lütfen bağlantınızı kontrol edin.")
+    else:
+        # Haberi 2 sütuna bölelim (Daha kurumsal durur)
+        n_news = len(real_news)
+        col_n1, col_n2 = st.columns(2)
+        
+        for i, news in enumerate(real_news):
+            target_col = col_n1 if i % 2 == 0 else col_n2
+            with target_col:
+                st.markdown(f"""
+                    <div style="
+                        background: {t['card_bg']};
+                        border: 1px solid {t['card_border']};
+                        border-left: 4px solid {t['primary']};
+                        padding: 1.25rem;
+                        border-radius: 4px 12px 12px 4px;
+                        margin-bottom: 1rem;
+                        min-height: 120px;
+                        display: flex; flex-direction: column; justify-content: space-between;
+                    ">
+                        <div>
+                            <div style="font-size: 0.72rem; color: {t['muted']}; margin-bottom: 0.5rem; font-weight: 600;">
+                                ⏱️ {news.timestamp.strftime('%H:%M')} &nbsp;·&nbsp; {news.content}
+                            </div>
+                            <div style="font-size: 0.9rem; color: {t['text_strong']}; font-weight: 700; line-height: 1.5; margin-bottom: 0.8rem;">
+                                {news.headline}
+                            </div>
+                        </div>
+                        <a href="{news.source}" target="_blank" style="
+                            font-size: 0.75rem; color: {t['primary']}; 
+                            text-decoration: none; font-weight: 800;
+                            display: inline-flex; align-items: center; gap: 5px;
+                        ">
+                            HABER DETAYI <span style="font-size: 1rem;">→</span>
+                        </a>
+                    </div>
+                """, unsafe_allow_html=True)
 
     # ── Quick Action Bar ──────────────────────────────────────────
     st.markdown("<div style='height:1.5rem;'></div>", unsafe_allow_html=True)
