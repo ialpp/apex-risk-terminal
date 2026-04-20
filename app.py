@@ -752,69 +752,6 @@ def main():
     route_page(page, user_info, engines)
 
 
-@st.dialog("⚙️ Profil ve Hesap Ayarları", width="large")
-def render_settings_dialog():
-    st.markdown("### Findeks Kurumsal Sistem Ayarları")
-    st.caption("Aşağıdaki sekmelerden kişisel bilgilerinizi, güvenlik ayarlarınızı ve bildirim tercihlerinizi yönetebilirsiniz.")
-    
-    t1, t2, t3, t4, t5 = st.tabs(["👤 Kişisel Bilgiler", "🔐 Güvenlik", "🔔 Bildirimler", "📦 Paket Yönetimi", "📋 İzinler"])
-    
-    with t1:
-        c1, c2 = st.columns(2)
-        with c1:
-            st.text_input("Ad Soyad", value=st.session_state.get("user_info", {}).get("full_name", ""))
-            st.text_input("TCKN / VKN", value="12345678901", disabled=True)
-            st.text_input("Cep Telefonu", "+90 5XX XXX XX XX")
-        with c2:
-            st.text_input("E-Posta Adresi", value=st.session_state.get("user_info", {}).get("email", ""))
-            st.text_input("Meslek / Ünvan", value=st.session_state.get("user_info", {}).get("role", ""))
-            st.text_input("Kurum / Departman", value=st.session_state.get("user_info", {}).get("department", ""))
-            
-        if st.button("Kişisel Bilgileri Güncelle", type="primary"):
-            st.success("Talebiniz alındı. Sistem yöneticisi onayına sunuldu.")
-
-    with t2:
-        st.write("#### Şifre Yönetimi")
-        sc1, sc2 = st.columns(2)
-        with sc1:
-            st.text_input("Mevcut Şifre", type="password")
-            st.text_input("Yeni Şifre", type="password")
-            st.text_input("Yeni Şifre (Tekrar)", type="password")
-            if st.button("Şifreyi Değiştir"):
-                st.info("Şifre değiştirme bağlantısı e-postanıza gönderildi.")
-        with sc2:
-            st.write("#### İki Adımlı Doğrulama (2FA)")
-            st.toggle("SMS ile Doğrulama (Aktif)", value=True)
-            st.toggle("Authenticator Uygulaması (Google/Microsoft)", value=False)
-            st.caption("Hesabınızın güvenliği için bir 2FA yöntemi seçmeniz zorunludur.")
-            
-    with t3:
-        st.write("#### Bildirim Tercihleri")
-        st.checkbox("Risk Raporu güncellendiğinde SMS gönder", value=True)
-        st.checkbox("Findeks puanı değişikliklerinde E-Posta gönder", value=True)
-        st.checkbox("Aylık finansal özet raporunu E-Posta ile al", value=True)
-        st.checkbox("Kampanya, indirim ve yeniliklerden haberdar olmak istiyorum", value=False)
-        if st.button("Tercihleri Kaydet"):
-            st.success("Bildirim tercihleriniz güncellendi.")
-            
-    with t4:
-        st.write("#### Mevcut Durum")
-        st.info("**Aktif Paket:** Kurumsal Premium Sürüm")
-        pc1, pc2, pc3 = st.columns(3)
-        pc1.metric("Kalan Sorgu Hakkı", "8,450", "-12")
-        pc2.metric("Kalan Detay Raporu", "1,200", "-5")
-        pc3.metric("Son Fatura Tutarı", "₺12,500", "Ödendi")
-        st.button("Paket İncele / Limit Arttır")
-        
-    with t5:
-        st.write("#### Rıza ve KVKK İzin Yönetimi")
-        st.checkbox("Kredi Kayıt Bürosu (KKB) verilerimin anonimleştirilerek analitik modellerde kullanılması", value=True)
-        st.checkbox("Açık Bankacılık kapsamında hesap bakiyesi doğrulama izinleri", value=True)
-        st.checkbox("Üçüncü taraf finansal kuruluşlarla limit paylaşım izni", value=False)
-        if st.button("İzinleri Uygula"):
-            st.toast("KVKK izin tercihleri başarıyla kaydedildi.", icon="✅")
-
-
 def render_apex_header(user_info: dict):
     """Premium iki seviyeli navigasyon üst çubuğu."""
     _BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -957,7 +894,8 @@ def render_apex_header(user_info: dict):
     with lang_col5:
         st.markdown("<div id='nav-ayarlar' style='margin-top: -3.5rem;'></div>", unsafe_allow_html=True)
         if st.button("⚙️", use_container_width=True, help="Ayarlar (Profil, Güvenlik, Abonelik)"):
-            render_settings_dialog()
+            st.session_state["current_page_label"] = "Sistem Ayarları"
+            st.rerun()
         
     st.markdown("</div>", unsafe_allow_html=True)
 
