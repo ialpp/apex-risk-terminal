@@ -100,3 +100,29 @@ def send_password_reset_email(to_email: str, temp_pass: str):
         </html>
     """)
     return send_email(to_email, subject, body)
+
+def send_welcome_email(to_email: str, username: str, password: str):
+    """Yeni kayıt olan kullanıcıya hoş geldin mesajı ve giriş bilgilerini gönderir."""
+    subject = "🎉 Apex Risk Terminal'e Hoş Geldiniz!"
+    body = textwrap.dedent(f"""
+        <html>
+        <body style="font-family: sans-serif; color: #1e293b;">
+            <div style="max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 12px;">
+                <h2 style="color: #004C91;">Apex Risk Terminal</h2>
+                <p>Merhaba,</p>
+                <p>Hesabınız başarıyla oluşturuldu! Artık kurumsal risk terminaline tam erişim sağlayabilirsiniz.</p>
+                <p><b>Giriş Bilgileriniz:</b></p>
+                <div style="background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                    <p style="margin: 5px 0;"><b>Kullanıcı Adı:</b> {username}</p>
+                    <p style="margin: 5px 0;"><b>Geçici Şifre:</b> {password}</p>
+                </div>
+                <p style="margin-top: 20px;">Güvenliğiniz için sisteme giriş yaptıktan sonra şifrenizi değiştirmenizi öneririz.</p>
+                <hr style="border: none; border-top: 1px solid #f1f5f9; margin: 20px 0;">
+                <p style="font-size: 0.75rem; color: #94a3b8;">
+                    © 2026 ProQuant Institutional - Apex Risk Management Suite
+                </p>
+            </div>
+        </body>
+        </html>
+    """)
+    return send_email(to_email, subject, body)

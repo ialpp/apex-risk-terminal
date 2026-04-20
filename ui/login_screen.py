@@ -12,7 +12,7 @@ import json
 import datetime
 from core.auth_system import (
     login, analyze_password_strength, render_password_strength,
-    send_2fa_otp, reset_password_request
+    send_2fa_otp, reset_password_request, send_welcome_email
 )
 from core.database_handler import db
 from config import APP_NAME, APP_VERSION
@@ -477,8 +477,8 @@ def _render_register_form():
 
     st.markdown("""
     <div style="font-size:0.75rem; color:#475569; margin-bottom:0.75rem; line-height:1.6;">
-        ⚠️ Hesabınız oluşturulduktan sonra yönetici onayına gönderilecektir.
-        Onay işlemi kurumsal e-posta adresinize bildirilecektir.
+        🛡️ Hesabınız oluşturulduktan sonra giriş bilgileriniz kurumsal e-posta adresinize 
+        anlık olarak gönderilecektir.
     </div>
     """, unsafe_allow_html=True)
 
@@ -495,7 +495,10 @@ def _render_register_form():
             department="Risk Yönetimi"
         )
         if ok:
-            st.success("✅ Hesap oluşturuldu. Yönetici onayı bekleniyor.")
+            with st.spinner("Bilgileriniz gönderiliyor..."):
+                send_welcome_email(email.strip(), username.strip(), password)
+            st.success("✅ Hesap oluşturuldu! Giriş bilgileriniz e-posta adresinize gönderildi.")
+            st.info("💡 Şimdi 'Giriş Yap' sekmesine geçerek sistemle bağlantı kurabilirsiniz.")
         else:
             st.error("❌ Bu kullanıcı adı zaten kullanılıyor.")
 

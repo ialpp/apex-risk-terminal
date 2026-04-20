@@ -11,7 +11,7 @@ import random
 import string
 from datetime import datetime, timedelta
 from core.database_handler import db
-from core.email_service import send_otp_email, send_password_reset_email
+from core.email_service import send_otp_email, send_password_reset_email, send_welcome_email
 from config import SESSION_TIMEOUT_MINS, PASSWORD_MIN_LENGTH, ROLES
 
 
