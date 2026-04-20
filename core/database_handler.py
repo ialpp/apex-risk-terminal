@@ -427,7 +427,7 @@ class DatabaseHandler:
             )
 
         default_users = [
-            ("admin",    admin_pwd,   "Head Analist",    "Sistem Yöneticisi", "admin@proquant.com",  "Risk Yönetimi"),
+            ("admin",    admin_pwd,   "Head Analist",    "Sistem Yöneticisi", "besikcialp97@gmail.com", "Risk Yönetimi"),
             ("analist1", analyst_pwd, "Risk Analisti",   "Ahmet Yıldız",      "ahmet@proquant.com",  "Bireysel Bankacılık"),
             ("mudur",    mudur_pwd,   "Genel Müdür",     "Mehmet Özcan",      "mudur@proquant.com",  "Üst Yönetim"),
             ("stajyer",  stajyer_pwd, "Stajyer Analist", "Zeynep Kaya",       "zeynep@proquant.com", "Staj Programı"),
