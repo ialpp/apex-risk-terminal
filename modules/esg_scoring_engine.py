@@ -26,6 +26,8 @@ import random
 import datetime
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Tuple, Union
+from config import LIVE_DATA_MODE
+from modules.nlp_intelligence import get_nlp_engine
 
 # ─────────────────────────────────────────────────────────────────────────────
 #  BÖLÜM 1: ENUM & SABİTLER
@@ -239,6 +241,14 @@ class ESGScoringEngine:
         # Sektörel ağırlıkları uygula
         weights = SECTOR_ESG_WEIGHTS.get(sector, SECTOR_ESG_WEIGHTS["Genel"])
         total_score = (e_avg * weights["E"]) + (s_avg * weights["S"]) + (g_avg * weights["G"])
+        
+        # CANLI VERİ EKLEMESİ: Haber duyarlılığı skoru etkiler
+        if LIVE_DATA_MODE:
+            nlp = get_nlp_engine()
+            narrative = nlp.get_active_narrative()
+            # Pazar genel duyarlılığı skora %10 etki eder
+            total_score += (narrative["market_sentiment"] * 10)
+            total_score = max(0, min(100, total_score))
         
         rating = self.calculate_rating(total_score)
         

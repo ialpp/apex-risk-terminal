@@ -30,6 +30,8 @@ import threading
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Tuple, Union
 import yfinance as yf
+import requests
+from config import LIVE_DATA_MODE
 
 # ─────────────────────────────────────────────────────────────────────────────
 #  BÖLÜM 1: ENUM & TİPLER
@@ -250,5 +252,6 @@ def get_risk_monitor() -> RealtimeRiskMonitor:
 def get_risk_simulator() -> RiskStreamSimulator:
     return _simulator_instance
 
-# Start simulator on load for demo purposes (optional)
-# _simulator_instance.start()
+# Start simulator on load for live mode
+if LIVE_DATA_MODE:
+    _simulator_instance.start()

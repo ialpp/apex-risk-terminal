@@ -2,6 +2,29 @@
 config.py — Kurumsal Kredi Risk Terminali Global Konfigürasyonu
 Tüm sabitler, eşik değerleri ve sistem parametreleri burada merkezi olarak tanımlanır.
 """
+import os
+import sys
+
+# SSL Karakter Seti Fix (özellikle Türkçe kullanıcı isimleri için)
+try:
+    import certifi
+    import shutil
+    original_ca = certifi.where()
+    # Eğer yolda ASCII olmayan karakter varsa ceritifa dosyasını güvenli bir yere kopyala
+    if any(ord(c) > 127 for c in original_ca):
+        temp_dir = os.path.join(os.environ.get('TEMP', 'C:\\Temp'), 'antigravity_ssl')
+        os.makedirs(temp_dir, exist_ok=True)
+        safe_ca_path = os.path.join(temp_dir, 'cacert.pem')
+        if not os.path.exists(safe_ca_path):
+            shutil.copy(original_ca, safe_ca_path)
+        os.environ['CURL_CA_BUNDLE'] = safe_ca_path
+        os.environ['SSL_CERT_FILE'] = safe_ca_path
+        os.environ['REQUESTS_CA_BUNDLE'] = safe_ca_path
+    else:
+        os.environ['CURL_CA_BUNDLE'] = original_ca
+except Exception:
+    os.environ['CURL_CA_BUNDLE'] = ""
+    os.environ['SSL_CERT_FILE'] = ""
 
 # ─────────────────────────────────────────────
 #  UYGULAMA METAVERİSİ
@@ -11,6 +34,8 @@ APP_SUBTITLE    = "Kurumsal Kredi Risk & Onay Terminali"
 APP_VERSION     = "5.0.0"
 APP_ICON        = "🏛️"
 APP_LANG_DEFAULT = "tr"   # "tr" | "en"
+LIVE_DATA_MODE   = True   # True: Gerçek piyasa verilerini çek | False: Simülasyon
+DEFAULT_TICKERS  = ["AAPL", "TRY=X", "GC=F", "^VIX", "BTC-USD", "NVDA", "THYAO.IS"]
 
 # ─────────────────────────────────────────────
 #  GÜVENLİK PARAMETRELERİ

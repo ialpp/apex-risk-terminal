@@ -535,7 +535,6 @@ def render_dashboard(user_info: dict):
     for col, label, target in actions:
         with col:
             if st.button(label, use_container_width=True):
-                st.session_state["nav_select_box"] = target
                 st.session_state["current_page_label"] = target
                 st.rerun()
 

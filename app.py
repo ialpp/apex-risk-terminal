@@ -257,17 +257,18 @@ def render_sidebar(user_info: dict) -> str:
         except ValueError:
             current_index = 0
 
-        def on_nav_change():
-            st.session_state["current_page_label"] = st.session_state["nav_select_box"]
-
-        st.selectbox(
+        # Keyless Selectbox Fix: st.session_state["nav_select_box"] hatasını engeller
+        selected_page = st.selectbox(
             "Navigasyon_Görünmez", 
             page_names, 
             index=current_index,
-            key="nav_select_box",
-            on_change=on_nav_change,
             label_visibility="collapsed"
         )
+        
+        # Eğer kullanıcı manuel olarak değiştirdiyse
+        if selected_page != current_page_label:
+            st.session_state["current_page_label"] = selected_page
+            st.rerun()
 
         st.divider()
 

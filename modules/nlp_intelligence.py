@@ -35,16 +35,15 @@ Version : 4.0.0
 from __future__ import annotations
 
 import re
+import time
 import math
 import random
 import datetime
-import collections
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Tuple, Union
-
-import numpy as np
+import requests
 import yfinance as yf
-from data.sample_warehouse import SampleDataWarehouse
+from data.sample_warehouse import SampleDataWarehouse, GLOBAL_CORPORATE_MASTER
 
 # ─────────────────────────────────────────────────────────────────────────────
 #  BÖLÜM 1: NLP VERİ MODELLERİ
@@ -102,7 +101,6 @@ class EntityExtractor:
 
     def __init__(self):
         # Kayıtlı ticker listesi (Warehouse'dan)
-        from data.sample_warehouse import GLOBAL_CORPORATE_MASTER
         self.tickers = {c["symbol"] for c in GLOBAL_CORPORATE_MASTER}
 
     def find_tickers(self, text: str) -> List[str]:
@@ -137,6 +135,11 @@ class NLPIntelligenceEngine:
         self.extractor = EntityExtractor()
         self.decay_model = NewsImpactDecline()
         self.news_buffer: List[FinancialNews] = []
+        # Auto-populate if possible
+        try:
+            self.news_buffer = LiveNewsProvider().fetch_live_news()
+        except Exception:
+            pass
 
     def process_incoming_news(self, news_item: FinancialNews) -> SentimentResult:
         """Yeni gelen bir haberi analiz et ve sonuç üret."""

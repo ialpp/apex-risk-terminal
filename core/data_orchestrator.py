@@ -45,6 +45,9 @@ from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Tuple, Union, Set
 
 import numpy as np
+import yfinance as yf
+import requests
+from config import LIVE_DATA_MODE, DEFAULT_TICKERS
 
 # ─────────────────────────────────────────────────────────────────────────────
 #  BÖLÜM 1: ŞEMA VE VERİ YAPILARI
@@ -115,9 +118,30 @@ class DataIngestionEngine:
     def __init__(self):
         self._active_feeds: Set[str] = set()
 
+    def fetch_live_data(self, symbol: str, period: str = "5d") -> Optional[MarketStream]:
+        """Yahoo Finance üzerinden gerçek veriyi çeker."""
+        try:
+            ticker = yf.Ticker(symbol)
+            hist = ticker.history(period=period)
+            
+            if hist.empty:
+                return None
+                
+            points = []
+            for ts, row in hist.iterrows():
+                points.append(DataPoint(
+                    timestamp=ts.to_pydatetime(),
+                    value=float(row['Close']),
+                    volume=float(row['Volume'])
+                ))
+            return MarketStream(symbol, "YAHOO_FINANCE", points)
+        except Exception as e:
+            logging.error(f"Live data fetch error for {symbol}: {e}")
+            return None
+
     def simulate_bloomberg_feed(self, symbol: str, count: int = 100) -> MarketStream:
         """Bloomberg terminal verisi simülasyonu."""
-        base_price = 1500 if "XAU" in symbol else 150 if "AAPL" in symbol else 100
+        base_price = 1500 if "XAU" in symbol or "GC=F" in symbol else 150 if "AAPL" in symbol else 100
         points = []
         now = datetime.datetime.now()
         for i in range(count):
@@ -186,7 +210,13 @@ class DataOrchestrator:
             if cached: return cached
             
         # 2. Veriyi çek (Ingest)
-        raw_stream = self.ingestor.simulate_bloomberg_feed(symbol)
+        raw_stream = None
+        if LIVE_DATA_MODE:
+            raw_stream = self.ingestor.fetch_live_data(symbol)
+            
+        if raw_stream is None:
+            # Fallback to simulation if live mode is off or fetch failed
+            raw_stream = self.ingestor.simulate_bloomberg_feed(symbol)
         
         # 3. Veriyi temizle ve işle (Transform)
         numpy_data = raw_stream.to_numpy()
